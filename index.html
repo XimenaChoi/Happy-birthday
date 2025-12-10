@@ -226,6 +226,8 @@
     textureLoader.setCrossOrigin('anonymous'); 
     
     const photoTextures = [];
+    // REMEMBER: You need to have photo1.jpg, photo2.jpg... up to photo25.jpg in the same folder.
+    // If you don't have them, they will appear black.
     for (let i = 1; i <= 25; i++) {
         photoTextures.push(textureLoader.load(`./photo${i}.jpg`));
     }
@@ -496,7 +498,8 @@
             const finalPos = new THREE.Vector3(Math.cos(angle)*r, h, Math.sin(angle)*r); const anchorPos = finalPos.clone(); anchorPos.y += Math.random() * 1.5 + 0.5;
             mesh.position.copy(finalPos); mesh.lookAt(mesh.position.x*2, h, mesh.position.z*2);
             // Cycle through the 25 unique photos
-            const plane = new THREE.Mesh(new THREE.PlaneGeometry(1.3, 1.3), new THREE.MeshBasicMaterial({map: photoTextures[i % 25]})); 
+            // FIX: Changed from MeshBasicMaterial to MeshStandardMaterial with roughness to prevent overexposure
+            const plane = new THREE.Mesh(new THREE.PlaneGeometry(1.3, 1.3), new THREE.MeshStandardMaterial({map: photoTextures[i % 25], roughness: 0.7, metalness: 0.0})); 
             plane.position.z = 0.6; if(type===1) plane.position.z = 0.8; if(type===0) mesh.add(plane); else if (type===1) mesh.children[0].add(plane); else mesh.add(plane);
             mesh.userData = { swaySpeed: 1+Math.random(), swayOff: Math.random()*6, baseRotX: mesh.rotation.x, triggerHeight: t }; mesh.scale.set(0,0,0); swayingOrnaments.push(mesh); clickableOrnaments.push(plane); ornamentsGroup.add(mesh);
             const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints([anchorPos, finalPos]), lineMat); ornamentsGroup.add(line);
