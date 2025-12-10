@@ -1,624 +1,617 @@
-{\rtf1\ansi\ansicpg1252\cocoartf2761
-\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
-{\colortbl;\red255\green255\blue255;}
-{\*\expandedcolortbl;;}
-\paperw11900\paperh16840\margl1440\margr1440\vieww29200\viewh16320\viewkind0
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magical Christmas Tree - Happy 19th Birthday Jana</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #000000; font-family: 'Segoe UI', sans-serif; }
+        #canvas-container { width: 100%; height: 100vh; display: block; }
+        .ui-layer { position: absolute; pointer-events: none; width: 100%; height: 100%; top: 0; left: 0; display: flex; justify-content: center; align-items: center; z-index: 10; }
+        #start-hint { color: #fff; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 4px; background: rgba(0,0,0,0.6); padding: 15px 40px; border: 2px solid #d4af37; border-radius: 4px; box-shadow: 0 0 30px rgba(212, 175, 55, 0.5); transition: opacity 0.8s, transform 0.3s; cursor: pointer; pointer-events: auto; }
+        #start-hint:hover { transform: scale(1.05); background: rgba(50, 40, 0, 0.7); }
+        
+        /* Polaroid Style Lightbox CSS */
+        #photo-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.85); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; z-index: 100; backdrop-filter: blur(5px); }
+        #photo-overlay.active { opacity: 1; pointer-events: auto; cursor: default; }
+        #overlay-content { display: flex; flex-direction: column; align-items: center; max-width: 80%; max-height: 85%; background-color: #fff; padding: 15px 15px 60px 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: rotate(-2deg); transition: transform 0.3s ease; }
+        #photo-overlay.active #overlay-content { transform: rotate(-2deg) scale(1); }
+        #overlay-img { max-width: 100%; max-height: 70vh; border: 1px solid #ddd; box-shadow: inset 0 0 10px rgba(0,0,0,0.1); display: block; }
+        #close-hint { position: absolute; bottom: 15px; width: 100%; text-align: center; color: #333; font-family: 'Comic Sans MS', 'Brush Script MT', cursive, sans-serif; font-size: 1.2rem; letter-spacing: 1px; cursor: pointer; }
+        #close-hint:hover { text-decoration: underline; }
+        
+        /* Hint for candle interaction */
+        #candle-hint { position: absolute; top: 15%; width: 100%; text-align: center; color: #fff; font-family: 'Pacifico', cursive; font-size: 2.5rem; opacity: 0; transition: opacity 0.5s; pointer-events: none; text-shadow: 0 0 15px #ffaa00; z-index: 20; line-height: 1.3; }
+        #candle-hint.active { opacity: 1; }
+    </style>
+</head>
+<body>
 
-\f0\fs24 \cf0 <!DOCTYPE html>\
-<html lang="en">\
-<head>\
-    <meta charset="UTF-8">\
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">\
-    <title>Magical Christmas Tree - Happy 19th Birthday Jana</title>\
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">\
-    \
-    <style>\
-        body \{ margin: 0; overflow: hidden; background-color: #000000; font-family: 'Segoe UI', sans-serif; \}\
-        #canvas-container \{ width: 100%; height: 100vh; display: block; \}\
-        .ui-layer \{ position: absolute; pointer-events: none; width: 100%; height: 100%; top: 0; left: 0; display: flex; justify-content: center; align-items: center; z-index: 10; \}\
-        #start-hint \{ color: #fff; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 4px; background: rgba(0,0,0,0.6); padding: 15px 40px; border: 2px solid #d4af37; border-radius: 4px; box-shadow: 0 0 30px rgba(212, 175, 55, 0.5); transition: opacity 0.8s, transform 0.3s; cursor: pointer; pointer-events: auto; \}\
-        #start-hint:hover \{ transform: scale(1.05); background: rgba(50, 40, 0, 0.7); \}\
-        \
-        /* Polaroid Style Lightbox CSS */\
-        #photo-overlay \{ position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.85); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; z-index: 100; backdrop-filter: blur(5px); \}\
-        #photo-overlay.active \{ opacity: 1; pointer-events: auto; cursor: default; \}\
-        #overlay-content \{ display: flex; flex-direction: column; align-items: center; max-width: 80%; max-height: 85%; background-color: #fff; padding: 15px 15px 60px 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: rotate(-2deg); transition: transform 0.3s ease; \}\
-        #photo-overlay.active #overlay-content \{ transform: rotate(-2deg) scale(1); \}\
-        #overlay-img \{ max-width: 100%; max-height: 70vh; border: 1px solid #ddd; box-shadow: inset 0 0 10px rgba(0,0,0,0.1); display: block; \}\
-        #close-hint \{ position: absolute; bottom: 15px; width: 100%; text-align: center; color: #333; font-family: 'Comic Sans MS', 'Brush Script MT', cursive, sans-serif; font-size: 1.2rem; letter-spacing: 1px; cursor: pointer; \}\
-        #close-hint:hover \{ text-decoration: underline; \}\
-        \
-        /* Hint for candle interaction */\
-        #candle-hint \{ position: absolute; top: 15%; width: 100%; text-align: center; color: #fff; font-family: 'Pacifico', cursive; font-size: 2.5rem; opacity: 0; transition: opacity 0.5s; pointer-events: none; text-shadow: 0 0 15px #ffaa00; z-index: 20; line-height: 1.3; \}\
-        #candle-hint.active \{ opacity: 1; \}\
-    </style>\
-</head>\
-<body>\
-\
-<div id="canvas-container"></div>\
-<div class="ui-layer">\
-    <div id="start-hint">Open the gift</div>\
-    <div id="candle-hint">Make a wish<br>click to blow out the candle!</div>\
-</div>\
-<div id="photo-overlay">\
-    <div id="overlay-content">\
-        <img id="overlay-img" src="">\
-        <div id="close-hint">Click to close memories</div>\
-    </div>\
-</div>\
-\
-<script type="x-shader/x-vertex" id="ribbon-vs">\
-    varying vec2 vUv; \
-    void main() \{ \
-        vUv = uv; \
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); \
-    \}\
-</script>\
-<script type="x-shader/x-fragment" id="ribbon-fs">\
-    uniform float uProgress;\
-    uniform float uRibbonOpacity;\
-    varying vec2 vUv;\
-    const vec3 colorBottom = vec3(0.0, 0.8, 0.2); \
-    const vec3 colorMiddle = vec3(1.0, 0.84, 0.0); \
-    const vec3 colorTop = vec3(0.9, 0.4, 0.5); \
-    const vec3 glowColor = vec3(1.2, 1.1, 0.8);\
-    void main() \{\
-        vec3 baseColor;\
-        if (vUv.x < 0.5) baseColor = mix(colorBottom, colorMiddle, vUv.x * 2.0); else baseColor = mix(colorMiddle, colorTop, (vUv.x - 0.5) * 2.0);\
-        float centerGlow = smoothstep(0.7, 0.3, abs(vUv.y - 0.5)); baseColor += centerGlow * 0.5;\
-        float alpha = smoothstep(uProgress + 0.01, uProgress - 0.08, vUv.x);\
-        float leadingEdgeIntensity = smoothstep(uProgress - 0.12, uProgress, vUv.x) * smoothstep(uProgress + 0.01, uProgress, vUv.x);\
-        vec3 finalColor = baseColor + (glowColor * leadingEdgeIntensity * 4.0);\
-        gl_FragColor = vec4(finalColor * 0.3, alpha * uRibbonOpacity); \
-    \}\
-</script>\
-\
-<script type="x-shader/x-vertex" id="particle-vs">\
-    attribute float size;\
-    attribute vec3 color;\
-    attribute vec3 aTargetPositionCake;\
-    attribute vec3 aTargetPosition;\
-    attribute vec3 aTargetPosition2;\
-    attribute vec3 aTargetPosition3;\
-    attribute vec3 aTargetPosition4;\
-    varying vec3 vColor;\
-    uniform float uTime;\
-    uniform float rendererHeight;\
-    uniform float uGrowth;\
-    uniform float uMorphState; \
-    uniform float uReturning;\
-\
-    float hash(float n) \{ return fract(sin(n) * 1e4); \}\
-    float noise(vec3 x) \{\
-        const vec3 step = vec3(110, 241, 171);\
-        vec3 i = floor(x);\
-        vec3 f = fract(x);\
-        float n = dot(i, step);\
-        vec3 u = f * f * (3.0 - 2.0 * f);\
-        return mix(mix(mix( hash(n + dot(step, vec3(0, 0, 0))), hash(n + dot(step, vec3(1, 0, 0))), u.x),\
-                       mix( hash(n + dot(step, vec3(0, 1, 0))), hash(n + dot(step, vec3(1, 1, 0))), u.x), u.y),\
-                   mix(mix( hash(n + dot(step, vec3(0, 0, 1))), hash(n + dot(step, vec3(1, 0, 1))), u.x),\
-                       mix( hash(n + dot(step, vec3(0, 1, 1))), hash(n + dot(step, vec3(1, 1, 1))), u.x), u.y), u.z);\
-    \}\
-\
-    void main() \{\
-        vColor = color;\
-        vec3 treePos = position;\
-        float normalizedHeight = treePos.y / 28.0; \
-        float treeNoise = sin(treePos.x * 0.5 + uTime) * cos(treePos.z * 0.5 + uTime);\
-        treePos.y += treeNoise * 0.2;\
-        treePos.x += sin(uTime * 0.5 + treePos.y) * 0.1;\
-        \
-        vec3 targetPosCake = aTargetPositionCake;\
-        vec3 targetPos1 = aTargetPosition;\
-        vec3 targetPos2 = aTargetPosition2;\
-        vec3 targetPos3 = aTargetPosition3;\
-        vec3 targetPos4 = aTargetPosition4;\
-\
-        float flowNoise = noise(vec3(position.x * 0.1, position.y * 0.1 + uTime * 0.5, position.z * 0.1));\
-        float transitionActive = sin(fract(uMorphState) * 3.14159);\
-        float stateRem = fract(uMorphState);\
-        if(stateRem < 0.01 || stateRem > 0.99) transitionActive = 0.0;\
-        if (uReturning > 0.5) transitionActive = 0.0;\
-\
-        float swirlIntensity = transitionActive * 15.0; \
-        vec3 swirlOffset = vec3(\
-            cos(uTime * 2.0 + flowNoise * 10.0) * swirlIntensity,\
-            sin(uTime * 3.0 + flowNoise * 10.0) * swirlIntensity * 0.5 + swirlIntensity * 0.5, \
-            sin(uTime * 2.0 + flowNoise * 10.0) * swirlIntensity\
-        );\
-\
-        vec3 finalPosNoSwirl;\
-        if (uReturning > 0.5) \{\
-            finalPosNoSwirl = mix(treePos, targetPos4, uMorphState / 5.0);\
-        \} else \{\
-            vec3 mixCake = mix(treePos, targetPosCake, clamp(uMorphState, 0.0, 1.0));\
-            vec3 mix1 = mix(mixCake, targetPos1, clamp(uMorphState - 1.0, 0.0, 1.0));\
-            vec3 mix2 = mix(mix1, targetPos2, clamp(uMorphState - 2.0, 0.0, 1.0));\
-            vec3 mix3 = mix(mix2, targetPos3, clamp(uMorphState - 3.0, 0.0, 1.0));\
-            finalPosNoSwirl = mix(mix3, targetPos4, clamp(uMorphState - 4.0, 0.0, 1.0));\
-        \}\
-\
-        float damping = 1.0;\
-        if (uReturning > 0.5) \{\
-             damping = 0.0;\
-        \} else \{\
-             float fractionalState = fract(uMorphState);\
-             damping = smoothstep(0.0, 0.2, fractionalState) * smoothstep(1.0, 0.8, fractionalState);\
-        \}\
-\
-        vec3 finalPos = finalPosNoSwirl + swirlOffset * damping;\
-        vec4 mvPosition = modelViewMatrix * vec4(finalPos, 1.0);\
-        \
-        float twinkle = sin(uTime * 2.0 + finalPos.y * 0.5 + finalPos.x) * 0.5 + 0.5;\
-        float finalSize = size * (rendererHeight * 0.05 / -mvPosition.z) * (0.6 + twinkle * 0.8);\
-\
-        if (uMorphState < 0.1 && uReturning < 0.5) \{\
-             float growthVisibility = smoothstep(normalizedHeight, normalizedHeight + 0.08, uGrowth);\
-             finalSize *= growthVisibility;\
-        \}\
-\
-        vec3 currentActiveTarget;\
-        if (uReturning > 0.5) currentActiveTarget = targetPos4;\
-        else if (uMorphState > 4.5) currentActiveTarget = targetPos4;\
-        else if (uMorphState > 3.5) currentActiveTarget = targetPos3;\
-        else if (uMorphState > 2.5) currentActiveTarget = targetPos2;\
-        else if (uMorphState > 1.5) currentActiveTarget = targetPos1;\
-        else currentActiveTarget = targetPosCake;\
-\
-        if (uMorphState > 0.5 && length(currentActiveTarget) < 0.1 && uReturning < 0.5) \{\
-             finalSize = 0.0;\
-        \}\
-        \
-        gl_PointSize = finalSize;\
-        gl_Position = projectionMatrix * mvPosition;\
-    \}\
-</script>\
-\
-<script type="x-shader/x-fragment" id="particle-fs">\
-    uniform float uMorphState;\
-    varying vec3 vColor; \
-    void main() \{ \
-        float d = distance(gl_PointCoord, vec2(0.5)); if(d > 0.5) discard; float alpha = smoothstep(0.5, 0.1, d); \
-        float brightness = mix(0.8, 2.5, min(uMorphState, 1.0));\
-        if (abs(uMorphState - 1.0) < 0.2) brightness += 1.0;\
-        gl_FragColor = vec4(vColor * brightness, alpha); \
-    \}\
-</script>\
-\
-<script type="importmap">\
-    \{ "imports": \{\
-        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",\
-        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"\
-    \}\}\
-</script>\
-\
-<script type="module">\
-    import * as THREE from 'three';\
-    import \{ OrbitControls \} from 'three/addons/controls/OrbitControls.js';\
-    import \{ EffectComposer \} from 'three/addons/postprocessing/EffectComposer.js';\
-    import \{ RenderPass \} from 'three/addons/postprocessing/RenderPass.js';\
-    import \{ UnrealBloomPass \} from 'three/addons/postprocessing/UnrealBloomPass.js';\
-\
-    const COLORS = \{ boxRichRed: 0x880000, boxPolishedGold: 0xffd700, treeGreen: new THREE.Color(0x00ff44), treeGold: new THREE.Color(0xffbb00), treeRose: new THREE.Color(0xff88aa), star: 0xffffee \};\
-    const SURROUNDING_PALETTE = [0x880000, 0x0a5f0a, 0x003388, 0x4b0082, 0xffd700, 0x800020, 0x008080, 0xff0000, 0x00ff00, 0x0000ff, 0xff00ff, 0x00ffff, 0xffa500];\
-    const ORNAMENT_PALETTE = [0xff0055, 0x00aaff, 0xffaa00, 0xaa00ff, 0x00ff88, 0xff3333];\
-    const TREE_HEIGHT = 28;\
-    const TREE_CONFIG = \{ radius: 8, particleCount: 18000, ribbonTurns: 8 \};\
-    const STATE = \{ CLOSED: 0, OPENING: 1, OPEN: 2, MORPH_MODE: 3 \};\
-    const STAGE = \{ TREE: 0, CAKE: 1, TEXT1: 2, TEXT2: 3, TEXT3: 4, TEXT4: 5 \};\
-\
-    let currentState = STATE.CLOSED;\
-    let currentStage = STAGE.TREE; \
-    let animProgress = 0, starScale = 0;\
-    let clock = new THREE.Clock();\
-    let isRotationPaused = false;\
-    let isTransforming = false; \
-    let scene, camera, renderer, composer, controls, mainSpotlight;\
-    let lidGroup, wallMesh, treeGroup, starMesh;\
-    let particleMaterial, ribbonMaterial;\
-    let snowGeo, snowPositions;\
-    let ornamentsGroup = new THREE.Group();\
-    let clickableOrnaments = [], swayingOrnaments = [], clickableBox = [];\
-    const raycaster = new THREE.Raycaster();\
-    const mouse = new THREE.Vector2();\
-    let cameraStartPos = new THREE.Vector3(), cameraTargetPos = new THREE.Vector3(0, 35, 85), cameraStartLookAt = new THREE.Vector3();\
-    let cameraTextPos = new THREE.Vector3(0, 25, 110);\
-    let cameraCakePos = new THREE.Vector3(0, 30, 100);\
-\
-    // --- LOCAL PHOTOS LOADING SETUP (FOR GITHUB PAGES) ---\
-    const textureLoader = new THREE.TextureLoader();\
-    // We don't strictly need setCrossOrigin for local files on the same server, but it's good practice.\
-    textureLoader.setCrossOrigin('anonymous'); \
-    \
-    // \uc0\u12304 \u37325 \u35201 \u12305 \u36889 \u35041 \u35373 \u23450 \u28858 \u33258 \u21205 \u35712 \u21462  photo1.jpg \u21040  photo25.jpg\
-    // \uc0\u35531 \u30906 \u20445 \u24744 \u30340  25 \u24373 \u29031 \u29255 \u24050 \u37325 \u26032 \u21629 \u21517 \u20006 \u33287 \u27492  index.html \u27284 \u26696 \u25918 \u22312  GitHub \u30340 \u21516 \u19968 \u20491 \u30446 \u37636 \u19979 \u12290 \
-    const photoTextures = [];\
-    for (let i = 1; i <= 25; i++) \{\
-        // \uc0\u36889 \u35041 \u20551 \u35373 \u29031 \u29255 \u26684 \u24335 \u28858  .jpg\u12290 \u22914 \u26524 \u26159  .png\u65292 \u35531 \u23559 \u19979 \u26041 \u30340  '.jpg' \u25913 \u28858  '.png'\
-        photoTextures.push(textureLoader.load(`./photo$\{i\}.jpg`));\
-    \}\
-    // -----------------------------------------\
-\
-    const sphereGeo = new THREE.SphereGeometry(1.1, 24, 24);\
-    const boxGeo = new THREE.BoxGeometry(1.5, 1.5, 1.5);\
-    const ribbonGeo = new THREE.BoxGeometry(1.6, 1.6, 0.2);\
-    const starShape = new THREE.Shape(); for(let j=0;j<10;j++)\{const r=(j%2===0)?1.0:0.5;const a=j/10*Math.PI*2;j===0?starShape.moveTo(Math.cos(a)*r,Math.sin(a)*r):starShape.lineTo(Math.cos(a)*r,Math.sin(a)*r);\}\
-    const starExtrudeGeo = new THREE.ExtrudeGeometry(starShape,\{depth:0.3, bevelEnabled:false\});\
-    const snowShape = new THREE.Shape(); for(let j=0;j<12;j++)\{const r=(j%2===0)?1.1:0.4;const a=j/12*Math.PI*2;j===0?snowShape.moveTo(Math.cos(a)*r,Math.sin(a)*r):snowShape.lineTo(Math.cos(a)*r,Math.sin(a)*r);\}\
-    const snowExtrudeGeo = new THREE.ExtrudeGeometry(snowShape,\{depth:0.2, bevelEnabled:false\});\
-\
-    function getGradientColor(t, targetColor) \{ if (t < 0.5) targetColor.copy(COLORS.treeGreen).lerp(COLORS.treeGold, t * 2.0); else targetColor.copy(COLORS.treeGold).lerp(COLORS.treeRose, (t - 0.5) * 2.0); return targetColor; \}\
-\
-    function createGiftTexture(baseColorHex, ribbonColorHex) \{\
-        const canvas = document.createElement('canvas'); canvas.width = 64; canvas.height = 64; const ctx = canvas.getContext('2d');\
-        ctx.fillStyle = new THREE.Color(baseColorHex).getStyle(); ctx.fillRect(0, 0, 64, 64);\
-        ctx.fillStyle = new THREE.Color(ribbonColorHex).getStyle();\
-        const w = 10; ctx.fillRect(32-w/2, 0, w, 64); ctx.fillRect(0, 32-w/2, 64, w);\
-        return new THREE.CanvasTexture(canvas);\
-    \}\
-\
-    function sampleTextCoordinates(text, font, fontSize) \{\
-        const canvas = document.createElement('canvas');\
-        const ctx = canvas.getContext('2d');\
-        const width = 1024; const height = 512;\
-        canvas.width = width; canvas.height = height;\
-        ctx.font = `$\{fontSize\}px "$\{font\}", cursive`;\
-        ctx.fillStyle = 'white';\
-        ctx.textAlign = 'center';\
-        ctx.textBaseline = 'middle';\
-        const lines = text.split('\\n');\
-        const lineHeight = fontSize * 1.2;\
-        const totalHeight = lines.length * lineHeight;\
-        let startY = (height - totalHeight) / 2 + lineHeight / 2;\
-        lines.forEach((line, index) => \{\
-             ctx.fillText(line, width / 2, startY + index * lineHeight);\
-        \});\
-        const imageData = ctx.getImageData(0, 0, width, height);\
-        const data = imageData.data;\
-        const points = [];\
-        for (let y = 0; y < height; y += 2) \{\
-            for (let x = 0; x < width; x += 2) \{\
-                const alpha = data[(y * width + x) * 4 + 3];\
-                if (alpha > 128) \{\
-                    points.push(new THREE.Vector3(\
-                        (x - width / 2) * 0.1,\
-                        (height - y) * 0.1 - 5,\
-                        (Math.random() - 0.5) * 2.0\
-                    ));\
-                \}\
-            \}\
-        \}\
-        return points;\
-    \}\
-\
-    function generateCakeCoordinates(count) \{\
-        const points = [];\
-        const bottomRadius = 12; const bottomHeight = 7;\
-        const topRadius = 8; const topHeight = 6;\
-        const candleHeight = 2.5;\
-        const flameHeight = bottomHeight + topHeight + candleHeight + 1;\
-        for (let i = 0; i < count; i++) \{\
-            const rand = Math.random();\
-            let pos = new THREE.Vector3();\
-            if (rand < 0.5) \{ \
-                const r = bottomRadius * Math.sqrt(Math.random());\
-                const a = Math.random() * Math.PI * 2;\
-                pos.set(Math.cos(a)*r, Math.random()*bottomHeight, Math.sin(a)*r);\
-            \} else if (rand < 0.85) \{ \
-                const r = topRadius * Math.sqrt(Math.random());\
-                const a = Math.random() * Math.PI * 2;\
-                pos.set(Math.cos(a)*r, bottomHeight + Math.random()*topHeight, Math.sin(a)*r);\
-            \} else if (rand < 0.95) \{\
-                const r = 0.5 * Math.sqrt(Math.random());\
-                const a = Math.random() * Math.PI * 2;\
-                pos.set(Math.cos(a)*r, bottomHeight + topHeight + Math.random()*candleHeight, Math.sin(a)*r);\
-            \} else \{\
-                 pos.set(0, flameHeight + (Math.random()-0.5)*0.5, 0);\
-            \}\
-            points.push(pos);\
-        \}\
-        return points;\
-    \}\
-\
-    function init() \{\
-        const container = document.getElementById('canvas-container');\
-        scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(0x020202, 0.008); \
-        camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 0.1, 500); camera.position.copy(cameraTargetPos);\
-        renderer = new THREE.WebGLRenderer(\{ antialias: true, powerPreference: "high-performance" \});\
-        renderer.setPixelRatio(window.devicePixelRatio); renderer.setSize(window.innerWidth, window.innerHeight);\
-        renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;\
-        container.appendChild(renderer.domElement);\
-        controls = new OrbitControls(camera, renderer.domElement); controls.enableDamping = true; controls.minDistance = 30; controls.maxDistance = 130; controls.maxPolarAngle = Math.PI/2 - 0.05; controls.autoRotate = true; controls.autoRotateSpeed = 0.6;\
-        scene.add(new THREE.AmbientLight(0xffffff, 0.2));\
-        mainSpotlight = new THREE.SpotLight(0xffeebb, 600); mainSpotlight.position.set(0, 60, 0); mainSpotlight.target.position.set(0, 0, 0); mainSpotlight.angle = Math.PI/8; mainSpotlight.penumbra = 0.5; scene.add(mainSpotlight); scene.add(mainSpotlight.target);\
-        scene.add(new THREE.PointLight(0x4444ff, 3, 100).translateY(20).translateX(-40)); scene.add(new THREE.PointLight(0xffaa00, 2, 80).translateY(10).translateZ(30));\
-        createGround();\
-        createSnow();\
-        createLuxuryBox();\
-        createSurroundingGifts();\
-        document.fonts.ready.then(() => \{\
-             createCompleteTree();\
-             animate();\
-        \});\
-        const renderPass = new RenderPass(scene, camera);\
-        const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 2.0, 0.5, 0.1);\
-        composer = new EffectComposer(renderer); composer.addPass(renderPass); composer.addPass(bloomPass);\
-        window.addEventListener('resize', onResize); window.addEventListener('click', onClick);\
-        document.getElementById('photo-overlay').addEventListener('click', closeOverlay); document.getElementById('close-hint').addEventListener('click', closeOverlay); document.getElementById('start-hint').addEventListener('click', startOpening);\
-    \}\
-\
-    function createGround() \{\
-        const plane = new THREE.Mesh(new THREE.PlaneGeometry(500, 500), new THREE.MeshStandardMaterial(\{ color: 0x080808, roughness: 0.8, metalness: 0.2 \}));\
-        plane.rotation.x = -Math.PI/2; plane.position.y = -0.1; scene.add(plane);\
-    \}\
-\
-    function createSnow() \{\
-        snowGeo = new THREE.BufferGeometry();\
-        const particleCount = 4000;\
-        snowPositions = new Float32Array(particleCount * 3);\
-        for(let i=0; i<particleCount; i++) \{ snowPositions[i*3] = (Math.random()-0.5)*400; snowPositions[i*3+1] = Math.random()*300; snowPositions[i*3+2] = (Math.random()-0.5)*400; \}\
-        snowGeo.setAttribute('position', new THREE.BufferAttribute(snowPositions, 3));\
-        const snowMat = new THREE.PointsMaterial(\{color: 0xffffff, size: 0.6, transparent:true, opacity:0.8, blending: THREE.AdditiveBlending\});\
-        const snowSystem = new THREE.Points(snowGeo, snowMat);\
-        scene.add(snowSystem);\
-    \}\
-\
-    function createSurroundingGifts() \{\
-        const ribbonColors = [0xffd700, 0xc0c0c0, 0xffffff];\
-        for(let i=0; i<40; i++) \{\
-            const size = Math.pow(Math.random(), 1.5) * 3.0 + 1.2;\
-            const boxG = new THREE.BoxGeometry(size, size, size);\
-            const baseCol = SURROUNDING_PALETTE[Math.floor(Math.random()*SURROUNDING_PALETTE.length)];\
-            const ribCol = ribbonColors[Math.floor(Math.random()*ribbonColors.length)];\
-            const texture = createGiftTexture(baseCol, ribCol);\
-            const mat = new THREE.MeshStandardMaterial(\{ map: texture, roughness: 0.4, metalness: 0.3 \});\
-            const box = new THREE.Mesh(boxG, mat);\
-            const angle = Math.random() * Math.PI * 2;\
-            const radius = 10 + Math.pow(Math.random(), 1.8) * 18; \
-            box.position.set(Math.cos(angle)*radius, size/2, Math.sin(angle)*radius);\
-            box.rotation.set(Math.random()*0.2, Math.random()*Math.PI, Math.random()*0.2);\
-            scene.add(box);\
-        \}\
-    \}\
-\
-    function createLuxuryBox() \{\
-        const R=14, H=16;\
-        const satinRedMat = new THREE.MeshStandardMaterial(\{ color: COLORS.boxRichRed, roughness: 0.35, metalness: 0.15, side: THREE.DoubleSide, emissive: COLORS.boxRichRed, emissiveIntensity: 0.3 \});\
-        const polishedGoldMat = new THREE.MeshStandardMaterial(\{ color: COLORS.boxPolishedGold, roughness: 0.02, metalness: 1.0, emissive: COLORS.boxPolishedGold, emissiveIntensity: 0.2 \});\
-        wallMesh = new THREE.Mesh(new THREE.CylinderGeometry(R, R, H, 128), satinRedMat); wallMesh.position.y = H/2;\
-        const bandGeo = new THREE.BoxGeometry(2.5, H+0.2, R*2.02);\
-        wallMesh.add(new THREE.Mesh(bandGeo, polishedGoldMat)); wallMesh.add(new THREE.Mesh(bandGeo, polishedGoldMat).rotateY(Math.PI/2));\
-        clickableBox.push(wallMesh); scene.add(wallMesh);\
-        const lidPivot = new THREE.Group(); lidPivot.position.set(0, H, -R); \
-        lidGroup = new THREE.Group(); \
-        lidGroup.position.set(0, 0, R);\
-        lidGroup.add(new THREE.Mesh(new THREE.CylinderGeometry(R+0.5, R+0.5, 3, 128), satinRedMat));\
-        const lidBand = new THREE.Mesh(new THREE.BoxGeometry(2.7, 3.1, (R+0.5)*2.02), polishedGoldMat); lidGroup.add(lidBand); lidGroup.add(lidBand.clone().rotateY(Math.PI/2));\
-        const bowGroup = new THREE.Group(); bowGroup.position.y = 1.8;\
-        const knot = new THREE.Mesh(new THREE.SphereGeometry(1.5, 32, 32), polishedGoldMat); knot.scale.set(1, 0.8, 1.2); bowGroup.add(knot);\
-        function createFlowingLoop(scale, rotZ) \{ const curve = new THREE.CatmullRomCurve3([new THREE.Vector3(0,0,0), new THREE.Vector3(scale, scale*0.8, 0), new THREE.Vector3(scale*1.8, 0, scale*0.5), new THREE.Vector3(scale, -scale*0.8, 0), new THREE.Vector3(0,0,0)], true, 'centripetal', 0.5); const shape = new THREE.Shape(); shape.moveTo(-0.1,-1.2); shape.lineTo(0.1,-1.2); shape.lineTo(0.1,1.2); shape.lineTo(-0.1,1.2); const geo = new THREE.ExtrudeGeometry(shape, \{ steps: 64, bevelEnabled: false, extrudePath: curve \}); const mesh = new THREE.Mesh(geo, polishedGoldMat); mesh.rotation.z = rotZ; return mesh; \}\
-        bowGroup.add(createFlowingLoop(5.5, Math.PI/8)); bowGroup.add(createFlowingLoop(5.5, -Math.PI/8)); bowGroup.add(createFlowingLoop(-5.5, Math.PI/8)); bowGroup.add(createFlowingLoop(-5.5, -Math.PI/8));\
-        const tailGeo = new THREE.BoxGeometry(2.4, 7, 0.1); tailGeo.translate(0, -3.5, 0);\
-        const tail1 = new THREE.Mesh(tailGeo, polishedGoldMat); tail1.position.set(-1, 0, 1); tail1.rotation.set(0.3, 0, 0.4); const tail2 = new THREE.Mesh(tailGeo, polishedGoldMat); tail2.position.set(1, 0, 1); tail2.rotation.set(0.3, 0, -0.4);\
-        bowGroup.add(tail1); bowGroup.add(tail2); lidGroup.add(bowGroup); lidPivot.add(lidGroup); clickableBox.push(lidGroup); lidGroup = lidPivot; scene.add(lidGroup);\
-    \}\
-    \
-    function createCompleteTree() \{\
-        treeGroup = new THREE.Group(); \
-        treeGroup.position.y = 0.1;\
-        treeGroup.visible = false;\
-        scene.add(treeGroup);\
-        const ribbonPts = []; const ribbonSteps = 300;\
-        for(let i=0; i<=ribbonSteps; i++)\{ const t = i/ribbonSteps; const r = TREE_CONFIG.radius * (1-t); const h = t * TREE_HEIGHT; const a = t * TREE_CONFIG.ribbonTurns * Math.PI * 2; ribbonPts.push(new THREE.Vector3(Math.cos(a)*r, h, Math.sin(a)*r)); \}\
-        const tubeGeo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(ribbonPts), ribbonSteps, 0.15, 8, false);\
-        ribbonMaterial = new THREE.ShaderMaterial(\{\
-            uniforms: \{ uProgress: \{ value: 0.0 \}, uRibbonOpacity: \{ value: 1.0 \} \},\
-            vertexShader: document.getElementById('ribbon-vs').textContent, fragmentShader: document.getElementById('ribbon-fs').textContent,\
-            side: THREE.DoubleSide, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending\
-        \});\
-        treeGroup.add(new THREE.Mesh(tubeGeo, ribbonMaterial));\
-\
-        const textPoints1 = sampleTextCoordinates("Happy 19th Birthday\\nJana", "Pacifico", 70);\
-        const textPoints2 = sampleTextCoordinates("Wishing you joy,\\nmagic, and love", "Pacifico", 60);\
-        const textPoints3 = sampleTextCoordinates("follow your dreams", "Pacifico", 65);\
-        const textPoints4 = sampleTextCoordinates("walk into the future\\nwith light in your eyes", "Pacifico", 55);\
-\
-        const particleCount = TREE_CONFIG.particleCount;\
-        const cakePoints = generateCakeCoordinates(particleCount);\
-        const pGeo = new THREE.BufferGeometry(); \
-        const pPos = new Float32Array(particleCount * 3); \
-        const pTargetPosCake = new Float32Array(particleCount * 3);\
-        const pTargetPos1 = new Float32Array(particleCount * 3);\
-        const pTargetPos2 = new Float32Array(particleCount * 3);\
-        const pTargetPos3 = new Float32Array(particleCount * 3);\
-        const pTargetPos4 = new Float32Array(particleCount * 3);\
-        const pCols = new Float32Array(particleCount * 3); \
-        const pSizes = new Float32Array(particleCount); \
-        const tempColor = new THREE.Color();\
-\
-        for (let i = 0; i < particleCount; i++) \{\
-            const t = Math.pow(Math.random(), 0.7); const y = t * TREE_HEIGHT; const rBase = TREE_CONFIG.radius * (1 - t) + 0.5; const r = rBase + (Math.random() - 0.5) * 2.0; const angle = Math.random() * Math.PI * 2;\
-            pPos[i*3] = r*Math.cos(angle); pPos[i*3+1] = y; pPos[i*3+2] = r*Math.sin(angle);\
-            const cp = cakePoints[i]; pTargetPosCake[i*3] = cp.x; pTargetPosCake[i*3+1] = cp.y; pTargetPosCake[i*3+2] = cp.z;\
-            if (textPoints1.length > 0) \{ const tp = textPoints1[i % textPoints1.length]; pTargetPos1[i*3] = tp.x; pTargetPos1[i*3+1] = tp.y; pTargetPos1[i*3+2] = tp.z; \}\
-            if (textPoints2.length > 0) \{ const tp = textPoints2[i % textPoints2.length]; pTargetPos2[i*3] = tp.x; pTargetPos2[i*3+1] = tp.y; pTargetPos2[i*3+2] = tp.z; \}\
-            if (textPoints3.length > 0) \{ const tp = textPoints3[i % textPoints3.length]; pTargetPos3[i*3] = tp.x; pTargetPos3[i*3+1] = tp.y; pTargetPos3[i*3+2] = tp.z; \}\
-            if (textPoints4.length > 0) \{ const tp = textPoints4[i % textPoints4.length]; pTargetPos4[i*3] = tp.x; pTargetPos4[i*3+1] = tp.y; pTargetPos4[i*3+2] = tp.z; \}\
-            getGradientColor(t, tempColor); const variation = Math.random()*0.5+0.5; pCols[i*3]=tempColor.r*variation; pCols[i*3+1]=tempColor.g*variation; pCols[i*3+2]=tempColor.b*variation;\
-            pSizes[i] = Math.random() * 0.8 + 0.4;\
-        \}\
-        pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3)); \
-        pGeo.setAttribute('aTargetPositionCake', new THREE.BufferAttribute(pTargetPosCake, 3));\
-        pGeo.setAttribute('aTargetPosition', new THREE.BufferAttribute(pTargetPos1, 3));\
-        pGeo.setAttribute('aTargetPosition2', new THREE.BufferAttribute(pTargetPos2, 3));\
-        pGeo.setAttribute('aTargetPosition3', new THREE.BufferAttribute(pTargetPos3, 3));\
-        pGeo.setAttribute('aTargetPosition4', new THREE.BufferAttribute(pTargetPos4, 3));\
-        pGeo.setAttribute('color', new THREE.BufferAttribute(pCols, 3)); \
-        pGeo.setAttribute('size', new THREE.BufferAttribute(pSizes, 1));\
-        \
-        particleMaterial = new THREE.ShaderMaterial(\{\
-            uniforms: \{ uTime: \{ value: 0 \}, rendererHeight: \{ value: window.innerHeight \}, uGrowth: \{ value: 0.0 \}, uMorphState: \{ value: 0.0 \}, uReturning: \{ value: 0.0 \} \},\
-            vertexShader: document.getElementById('particle-vs').textContent, fragmentShader: document.getElementById('particle-fs').textContent,\
-            transparent: true, blending: THREE.AdditiveBlending, depthWrite: false\
-        \});\
-        treeGroup.add(new THREE.Points(pGeo, particleMaterial));\
-\
-        const starShapeTop = new THREE.Shape(); for(let i=0;i<10;i++)\{const r=(i%2===0)?2.5:1.0; const a=i/10*Math.PI*2; i===0?starShapeTop.moveTo(Math.cos(a)*r,Math.sin(a)*r):starShapeTop.lineTo(Math.cos(a)*r,Math.sin(a)*r);\}\
-        starMesh = new THREE.Mesh(new THREE.ExtrudeGeometry(starShapeTop,\{depth:0.8,bevelEnabled:true,bevelSize:0.3\}), new THREE.MeshStandardMaterial(\{color:COLORS.star, emissive:COLORS.star, emissiveIntensity: 2.5, roughness: 0.1, metalness: 0.9\}));\
-        starMesh.position.y = TREE_HEIGHT + 1.5; starMesh.scale.set(0,0,0); treeGroup.add(starMesh);\
-        starMesh.userData.isClickable = false;\
-\
-        createOrnaments(TREE_HEIGHT, TREE_CONFIG.radius);\
-        ornamentsGroup.visible = false;\
-        treeGroup.add(ornamentsGroup);\
-    \}\
-\
-    function createOrnaments(height, maxR) \{\
-        ornamentsGroup.visible = false;\
-        const goldMat = new THREE.MeshStandardMaterial(\{ color: 0xffdd44, metalness: 0.8, roughness: 0.2, emissive: 0x553300, emissiveIntensity: 0.4 \});\
-        const lineMat = new THREE.LineBasicMaterial(\{ color: 0x886644, transparent: true, opacity: 0.6 \});\
-        for(let i=0; i<25; i++) \{ \
-            const color = ORNAMENT_PALETTE[i % ORNAMENT_PALETTE.length]; \
-            const mat = new THREE.MeshPhysicalMaterial(\{ color: color, metalness: 0.6, roughness: 0.1, clearcoat: 1.0, emissive: color, emissiveIntensity: 0.5 \});\
-            let mesh; const type = i % 4;\
-            if(type === 0) mesh = new THREE.Mesh(sphereGeo, mat); else if (type === 1) \{ mesh = new THREE.Group(); mesh.add(new THREE.Mesh(boxGeo, mat)); const r = new THREE.Mesh(ribbonGeo, goldMat); mesh.add(r); mesh.add(r.clone().rotateY(Math.PI/2)); \} else if (type === 2) mesh = new THREE.Mesh(starExtrudeGeo, goldMat); \
-            else mesh = new THREE.Mesh(snowExtrudeGeo, new THREE.MeshPhysicalMaterial(\{ color: 0xffffff, transmission: 1.0, opacity: 1, roughness: 0.05, ior: 1.5, emissive: 0x88ccee, emissiveIntensity: 0.4 \}));\
-            const t = Math.random() * 0.8 + 0.1; const h = t * height; const rBase = maxR * (1 - t) + 0.5; const r = rBase + (Math.random()-0.5) * 2.0; const angle = Math.random() * Math.PI * 2;\
-            const finalPos = new THREE.Vector3(Math.cos(angle)*r, h, Math.sin(angle)*r); const anchorPos = finalPos.clone(); anchorPos.y += Math.random() * 1.5 + 0.5;\
-            mesh.position.copy(finalPos); mesh.lookAt(mesh.position.x*2, h, mesh.position.z*2);\
-            // Cycle through the 25 unique photos\
-            const plane = new THREE.Mesh(new THREE.PlaneGeometry(1.3, 1.3), new THREE.MeshBasicMaterial(\{map: photoTextures[i % 25]\})); \
-            plane.position.z = 0.6; if(type===1) plane.position.z = 0.8; if(type===0) mesh.add(plane); else if (type===1) mesh.children[0].add(plane); else mesh.add(plane);\
-            mesh.userData = \{ swaySpeed: 1+Math.random(), swayOff: Math.random()*6, baseRotX: mesh.rotation.x, triggerHeight: t \}; mesh.scale.set(0,0,0); swayingOrnaments.push(mesh); clickableOrnaments.push(plane); ornamentsGroup.add(mesh);\
-            const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints([anchorPos, finalPos]), lineMat); ornamentsGroup.add(line);\
-        \}\
-    \}\
-\
-    function onClick(e) \{\
-        if(e.target.id==='start-hint' || e.target.id==='close-hint' || document.getElementById('photo-overlay').classList.contains('active')) return;\
-        mouse.x=(e.clientX/window.innerWidth)*2-1; mouse.y=-(e.clientY/window.innerHeight)*2+1; raycaster.setFromCamera(mouse,camera);\
-        if(currentState===STATE.CLOSED && raycaster.intersectObjects(clickableBox,true).length>0) \{\
-             startOpening();\
-        \} else if(currentState===STATE.OPEN && !isTransforming) \{ \
-            const starIntersects = raycaster.intersectObject(starMesh);\
-            if (starIntersects.length > 0 && starMesh.userData.isClickable) \{\
-                transformToCake(); \
-            \} else \{\
-                const its=raycaster.intersectObjects(clickableOrnaments); \
-                if(its.length>0) openOverlay(its[0].object.material.map.image); \
-            \}\
-        \} else if (currentState === STATE.MORPH_MODE && !isTransforming) \{\
-            if (!document.getElementById('photo-overlay').classList.contains('active')) \{\
-                 if (currentStage === STAGE.CAKE) transformToText1();\
-                 else if (currentStage === STAGE.TEXT1) transformToText2();\
-                 else if (currentStage === STAGE.TEXT2) transformToText3();\
-                 else if (currentStage === STAGE.TEXT3) transformToText4();\
-                 else if (currentStage === STAGE.TEXT4) restoreTree(); \
-            \}\
-        \}\
-    \}\
-\
-    function startOpening() \{ if(currentState!==STATE.CLOSED)return; currentState=STATE.OPENING; cameraStartPos.copy(camera.position); camera.getWorldDirection(cameraStartLookAt); cameraStartLookAt.add(cameraStartPos); document.getElementById('start-hint').style.opacity=0; setTimeout(()=>document.getElementById('start-hint').remove(),800); new TWEEN.Tween(mainSpotlight).to(\{intensity:2500, angle: Math.PI/6\}, 2500).start(); \}\
-    \
-    function transformToCake() \{\
-        isTransforming = true; currentState = STATE.MORPH_MODE; currentStage = STAGE.CAKE; isRotationPaused = true; starMesh.userData.isClickable = false; \
-        new TWEEN.Tween(ribbonMaterial.uniforms.uRibbonOpacity).to(\{value: 0.0\}, 1000).start();\
-        new TWEEN.Tween(ornamentsGroup.scale).to(\{x: 0, y: 0, z: 0\}, 800).start();\
-        new TWEEN.Tween(starMesh.scale).to(\{x: 0, y: 0, z: 0\}, 800).start();\
-        new TWEEN.Tween(particleMaterial.uniforms.uMorphState).to(\{value: 1.0\}, 3000).easing(TWEEN.Easing.Cubic.InOut).onComplete(() => \{ \
-            isTransforming = false; \
-            document.getElementById('candle-hint').classList.add('active');\
-        \}).start();\
-        new TWEEN.Tween(camera.position).to(\{x: cameraCakePos.x, y: cameraCakePos.y, z: cameraCakePos.z\}, 2500).easing(TWEEN.Easing.Quadratic.InOut).start();\
-    \}\
-\
-    function transformToText1() \{\
-        document.getElementById('candle-hint').classList.remove('active');\
-        isTransforming = true; currentStage = STAGE.TEXT1;\
-        new TWEEN.Tween(particleMaterial.uniforms.uMorphState).to(\{value: 2.0\}, 3500).easing(TWEEN.Easing.Back.Out).onComplete(() => \{ isTransforming = false; \}).start();\
-        new TWEEN.Tween(camera.position).to(\{x: cameraTextPos.x, y: cameraTextPos.y, z: cameraTextPos.z\}, 3000).easing(TWEEN.Easing.Quadratic.InOut).start();\
-    \}\
-    function transformToText2() \{\
-        isTransforming = true; currentStage = STAGE.TEXT2;\
-        new TWEEN.Tween(particleMaterial.uniforms.uMorphState).to(\{value: 3.0\}, 3500).easing(TWEEN.Easing.Cubic.InOut).onComplete(() => \{ isTransforming = false; \}).start();\
-    \}\
-    function transformToText3() \{\
-        isTransforming = true; currentStage = STAGE.TEXT3;\
-        new TWEEN.Tween(particleMaterial.uniforms.uMorphState).to(\{value: 4.0\}, 3500).easing(TWEEN.Easing.Cubic.InOut).onComplete(() => \{ isTransforming = false; \}).start();\
-    \}\
-    function transformToText4() \{\
-        isTransforming = true; currentStage = STAGE.TEXT4;\
-        new TWEEN.Tween(particleMaterial.uniforms.uMorphState).to(\{value: 5.0\}, 3500).easing(TWEEN.Easing.Cubic.InOut).onComplete(() => \{ isTransforming = false; \}).start();\
-    \}\
-\
-    function restoreTree() \{\
-        isTransforming = true;\
-        currentStage = STAGE.TREE;\
-        particleMaterial.uniforms.uReturning.value = 1.0;\
-        new TWEEN.Tween(ribbonMaterial.uniforms.uRibbonOpacity).to(\{value: 1.0\}, 1500).delay(200).start();\
-        new TWEEN.Tween(ornamentsGroup.scale).to(\{x: 1, y: 1, z: 1\}, 1500).delay(200).start();\
-        new TWEEN.Tween(starMesh.scale).to(\{x: 1, y: 1, z: 1\}, 1500).delay(200).start();\
-        new TWEEN.Tween(particleMaterial.uniforms.uMorphState)\
-            .to(\{value: 0.0\}, 1500)\
-            .easing(TWEEN.Easing.Quadratic.InOut)\
-            .onComplete(() => \{ \
-                isTransforming = false; \
-                currentState = STATE.OPEN;\
-                isRotationPaused = false;\
-                starMesh.userData.isClickable = true; \
-                particleMaterial.uniforms.uReturning.value = 0.0;\
-            \})\
-            .start();\
-        new TWEEN.Tween(camera.position).to(\{x: cameraTargetPos.x, y: cameraTargetPos.y, z: cameraTargetPos.z\}, 1500).easing(TWEEN.Easing.Quadratic.InOut).start();\
-    \}\
-\
-    function openOverlay(img) \{ isRotationPaused=true; document.getElementById('overlay-img').src=img.toDataURL(); document.getElementById('photo-overlay').classList.add('active'); \}\
-    function closeOverlay(e) \{ document.getElementById('photo-overlay').classList.remove('active'); if(currentState === STATE.OPEN) isRotationPaused=false; \}\
-    function onResize() \{ camera.aspect=window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth,window.innerHeight); composer.setSize(window.innerWidth,window.innerHeight); if(particleMaterial) particleMaterial.uniforms.rendererHeight.value = window.innerHeight; \}\
-    const TWEEN=\{tweens:[],update()\{this.tweens.forEach(t=>t.update(clock.getElapsedTime()));this.tweens=this.tweens.filter(t=>!t.done);\},Easing:\{Linear:\{None:function(k)\{return k;\}\},Quadratic:\{InOut:function(k)\{if((k*=2)<1)return 0.5*k*k;return-0.5*(--k*(k-2)-1);\}\},Back:\{Out:function(k)\{const s=1.70158;return--k*k*((s+1)*k+s)+1;\}\},Cubic:\{InOut:function(k)\{if((k*=2)<1)return 0.5*k*k*k;return 0.5*((k-=2)*k*k+2);\}\}\},Tween:function(o)\{this.o=o;this.done=false;this._easing=TWEEN.Easing.Linear.None;this._onComplete=null;this._delay=0;this.to=function(t,d)\{this.t=t;this.d=d/1000;this.sT=-1;return this;\};this.easing=function(e)\{this._easing=e;return this;\};this.delay=function(d)\{this._delay=d/1000;return this;\};this.onComplete=function(c)\{this._onComplete=c;return this;\};this.start=function()\{this.sT=clock.getElapsedTime()+this._delay;this.sV=\{\};for(let k in this.t)this.sV[k]=this.o[k];TWEEN.tweens.push(this);\};this.update=function(t)\{if(t<this.sT)return;let p=Math.min(1,(t-this.sT)/this.d);let e=this._easing(p);for(let k in this.t)this.o[k]=this.sV[k]+(this.t[k]-this.sV[k])*e;if(p===1)\{this.done=true;if(this._onComplete)this._onComplete();\}\}\}\};\
-    function smoothstep(edge0, edge1, x) \{ x = Math.max(0, Math.min(1, (x - edge0) / (edge1 - edge0))); return x * x * (3 - 2 * x); \}\
-\
-    function animate() \{\
-        requestAnimationFrame(animate); const time=clock.getElapsedTime(); TWEEN.update();\
-        if(particleMaterial) particleMaterial.uniforms.uTime.value = time;\
-        if(snowPositions) \{\
-            for(let i = 0; i < snowPositions.length; i+=3) \{\
-                snowPositions[i+1] -= 0.2 + Math.random() * 0.1;\
-                snowPositions[i] += Math.sin(time + snowPositions[i+1] * 0.05) * 0.05;\
-                if(snowPositions[i+1] < -10) snowPositions[i+1] = 300;\
-            \}\
-            snowGeo.attributes.position.needsUpdate = true;\
-        \}\
-        if(currentState === STATE.OPENING) \{\
-            animProgress += 0.006; const overallProgress = smoothstep(0, 1, animProgress);\
-            camera.position.lerpVectors(cameraStartPos, cameraTargetPos, overallProgress); const currentLookAt = new THREE.Vector3().lerpVectors(cameraStartLookAt, new THREE.Vector3(0, 15, 0), overallProgress); camera.lookAt(currentLookAt);\
-            const boxProgress = Math.min(1, animProgress * 1.2); const easeBox = smoothstep(0, 1, boxProgress);\
-            lidGroup.rotation.x = -Math.PI/1.3 * easeBox; lidGroup.position.set(0, 16+boxProgress*20, -14-boxProgress*20); \
-            wallMesh.scale.y = 1 - easeBox; wallMesh.position.y = (8 * (1-easeBox));\
-            if(boxProgress>=1) wallMesh.visible = lidGroup.visible = false;\
-            if(animProgress > 0.15) \{\
-                if (!treeGroup.visible) treeGroup.visible = true;\
-                const treeProgressRaw = (animProgress - 0.15) / 0.85; const treeProgress = smoothstep(0, 1, treeProgressRaw);\
-                particleMaterial.uniforms.uGrowth.value = treeProgress;\
-                if(ribbonMaterial) ribbonMaterial.uniforms.uProgress.value = treeProgress;\
-                if(treeProgress > 0.01 && currentState !== STATE.MORPH_MODE) ornamentsGroup.visible = true;\
-                swayingOrnaments.forEach(orn => \{ if(treeProgress >= orn.userData.triggerHeight) orn.scale.lerp(new THREE.Vector3(1,1,1), 0.05); \});\
-                if(treeProgress >= 0.95) \{ starScale = Math.min(1, starScale + 0.03); starMesh.scale.setScalar(starScale * (0.5 + Math.sin(time*15)*0.1)); \}\
-            \}\
-            if(animProgress >= 1.1 && starScale >= 0.9) \{\
-                 currentState = STATE.OPEN;\
-                 if (starMesh) starMesh.userData.isClickable = true;\
-            \}\
-        \} else if (currentState === STATE.OPEN) \{\
-            if(!isRotationPaused) \{ treeGroup.rotation.y += 0.002; starMesh.scale.setScalar(0.5 + Math.sin(time*8)*0.1); swayingOrnaments.forEach(o => o.rotation.x = o.userData.baseRotX + Math.sin(time*o.userData.swaySpeed+o.userData.swayOff)*0.15); \}\
-        \} else if (currentState === STATE.MORPH_MODE) \{\
-             camera.lookAt(0, 15, 0);\
-        \}\
-        if(currentState !== STATE.OPENING) controls.update(); composer.render();\
-    \}\
-    init();\
-</script>\
-</body>\
-</html>}
+<div id="canvas-container"></div>
+<div class="ui-layer">
+    <div id="start-hint">Open the gift</div>
+    <div id="candle-hint">Make a wish<br>click to blow out the candle!</div>
+</div>
+<div id="photo-overlay">
+    <div id="overlay-content">
+        <img id="overlay-img" src="">
+        <div id="close-hint">Click to close memories</div>
+    </div>
+</div>
+
+<script type="x-shader/x-vertex" id="ribbon-vs">
+    varying vec2 vUv; 
+    void main() { 
+        vUv = uv; 
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); 
+    }
+</script>
+<script type="x-shader/x-fragment" id="ribbon-fs">
+    uniform float uProgress;
+    uniform float uRibbonOpacity;
+    varying vec2 vUv;
+    const vec3 colorBottom = vec3(0.0, 0.8, 0.2); 
+    const vec3 colorMiddle = vec3(1.0, 0.84, 0.0); 
+    const vec3 colorTop = vec3(0.9, 0.4, 0.5); 
+    const vec3 glowColor = vec3(1.2, 1.1, 0.8);
+    void main() {
+        vec3 baseColor;
+        if (vUv.x < 0.5) baseColor = mix(colorBottom, colorMiddle, vUv.x * 2.0); else baseColor = mix(colorMiddle, colorTop, (vUv.x - 0.5) * 2.0);
+        float centerGlow = smoothstep(0.7, 0.3, abs(vUv.y - 0.5)); baseColor += centerGlow * 0.5;
+        float alpha = smoothstep(uProgress + 0.01, uProgress - 0.08, vUv.x);
+        float leadingEdgeIntensity = smoothstep(uProgress - 0.12, uProgress, vUv.x) * smoothstep(uProgress + 0.01, uProgress, vUv.x);
+        vec3 finalColor = baseColor + (glowColor * leadingEdgeIntensity * 4.0);
+        gl_FragColor = vec4(finalColor * 0.3, alpha * uRibbonOpacity); 
+    }
+</script>
+
+<script type="x-shader/x-vertex" id="particle-vs">
+    attribute float size;
+    attribute vec3 color;
+    attribute vec3 aTargetPositionCake;
+    attribute vec3 aTargetPosition;
+    attribute vec3 aTargetPosition2;
+    attribute vec3 aTargetPosition3;
+    attribute vec3 aTargetPosition4;
+    varying vec3 vColor;
+    uniform float uTime;
+    uniform float rendererHeight;
+    uniform float uGrowth;
+    uniform float uMorphState; 
+    uniform float uReturning;
+
+    float hash(float n) { return fract(sin(n) * 1e4); }
+    float noise(vec3 x) {
+        const vec3 step = vec3(110, 241, 171);
+        vec3 i = floor(x);
+        vec3 f = fract(x);
+        float n = dot(i, step);
+        vec3 u = f * f * (3.0 - 2.0 * f);
+        return mix(mix(mix( hash(n + dot(step, vec3(0, 0, 0))), hash(n + dot(step, vec3(1, 0, 0))), u.x),
+                       mix( hash(n + dot(step, vec3(0, 1, 0))), hash(n + dot(step, vec3(1, 1, 0))), u.x), u.y),
+                   mix(mix( hash(n + dot(step, vec3(0, 0, 1))), hash(n + dot(step, vec3(1, 0, 1))), u.x),
+                       mix( hash(n + dot(step, vec3(0, 1, 1))), hash(n + dot(step, vec3(1, 1, 1))), u.x), u.y), u.z);
+    }
+
+    void main() {
+        vColor = color;
+        vec3 treePos = position;
+        float normalizedHeight = treePos.y / 28.0; 
+        float treeNoise = sin(treePos.x * 0.5 + uTime) * cos(treePos.z * 0.5 + uTime);
+        treePos.y += treeNoise * 0.2;
+        treePos.x += sin(uTime * 0.5 + treePos.y) * 0.1;
+        
+        vec3 targetPosCake = aTargetPositionCake;
+        vec3 targetPos1 = aTargetPosition;
+        vec3 targetPos2 = aTargetPosition2;
+        vec3 targetPos3 = aTargetPosition3;
+        vec3 targetPos4 = aTargetPosition4;
+
+        float flowNoise = noise(vec3(position.x * 0.1, position.y * 0.1 + uTime * 0.5, position.z * 0.1));
+        float transitionActive = sin(fract(uMorphState) * 3.14159);
+        float stateRem = fract(uMorphState);
+        if(stateRem < 0.01 || stateRem > 0.99) transitionActive = 0.0;
+        if (uReturning > 0.5) transitionActive = 0.0;
+
+        float swirlIntensity = transitionActive * 15.0; 
+        vec3 swirlOffset = vec3(
+            cos(uTime * 2.0 + flowNoise * 10.0) * swirlIntensity,
+            sin(uTime * 3.0 + flowNoise * 10.0) * swirlIntensity * 0.5 + swirlIntensity * 0.5, 
+            sin(uTime * 2.0 + flowNoise * 10.0) * swirlIntensity
+        );
+
+        vec3 finalPosNoSwirl;
+        if (uReturning > 0.5) {
+            finalPosNoSwirl = mix(treePos, targetPos4, uMorphState / 5.0);
+        } else {
+            vec3 mixCake = mix(treePos, targetPosCake, clamp(uMorphState, 0.0, 1.0));
+            vec3 mix1 = mix(mixCake, targetPos1, clamp(uMorphState - 1.0, 0.0, 1.0));
+            vec3 mix2 = mix(mix1, targetPos2, clamp(uMorphState - 2.0, 0.0, 1.0));
+            vec3 mix3 = mix(mix2, targetPos3, clamp(uMorphState - 3.0, 0.0, 1.0));
+            finalPosNoSwirl = mix(mix3, targetPos4, clamp(uMorphState - 4.0, 0.0, 1.0));
+        }
+
+        float damping = 1.0;
+        if (uReturning > 0.5) {
+             damping = 0.0;
+        } else {
+             float fractionalState = fract(uMorphState);
+             damping = smoothstep(0.0, 0.2, fractionalState) * smoothstep(1.0, 0.8, fractionalState);
+        }
+
+        vec3 finalPos = finalPosNoSwirl + swirlOffset * damping;
+        vec4 mvPosition = modelViewMatrix * vec4(finalPos, 1.0);
+        
+        float twinkle = sin(uTime * 2.0 + finalPos.y * 0.5 + finalPos.x) * 0.5 + 0.5;
+        float finalSize = size * (rendererHeight * 0.05 / -mvPosition.z) * (0.6 + twinkle * 0.8);
+
+        if (uMorphState < 0.1 && uReturning < 0.5) {
+             float growthVisibility = smoothstep(normalizedHeight, normalizedHeight + 0.08, uGrowth);
+             finalSize *= growthVisibility;
+        }
+
+        vec3 currentActiveTarget;
+        if (uReturning > 0.5) currentActiveTarget = targetPos4;
+        else if (uMorphState > 4.5) currentActiveTarget = targetPos4;
+        else if (uMorphState > 3.5) currentActiveTarget = targetPos3;
+        else if (uMorphState > 2.5) currentActiveTarget = targetPos2;
+        else if (uMorphState > 1.5) currentActiveTarget = targetPos1;
+        else currentActiveTarget = targetPosCake;
+
+        if (uMorphState > 0.5 && length(currentActiveTarget) < 0.1 && uReturning < 0.5) {
+             finalSize = 0.0;
+        }
+        
+        gl_PointSize = finalSize;
+        gl_Position = projectionMatrix * mvPosition;
+    }
+</script>
+
+<script type="x-shader/x-fragment" id="particle-fs">
+    uniform float uMorphState;
+    varying vec3 vColor; 
+    void main() { 
+        float d = distance(gl_PointCoord, vec2(0.5)); if(d > 0.5) discard; float alpha = smoothstep(0.5, 0.1, d); 
+        float brightness = mix(0.8, 2.5, min(uMorphState, 1.0));
+        if (abs(uMorphState - 1.0) < 0.2) brightness += 1.0;
+        gl_FragColor = vec4(vColor * brightness, alpha); 
+    }
+</script>
+
+<script type="importmap">
+    { "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }}
+</script>
+
+<script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+    import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+    import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+    const COLORS = { boxRichRed: 0x880000, boxPolishedGold: 0xffd700, treeGreen: new THREE.Color(0x00ff44), treeGold: new THREE.Color(0xffbb00), treeRose: new THREE.Color(0xff88aa), star: 0xffffee };
+    const SURROUNDING_PALETTE = [0x880000, 0x0a5f0a, 0x003388, 0x4b0082, 0xffd700, 0x800020, 0x008080, 0xff0000, 0x00ff00, 0x0000ff, 0xff00ff, 0x00ffff, 0xffa500];
+    const ORNAMENT_PALETTE = [0xff0055, 0x00aaff, 0xffaa00, 0xaa00ff, 0x00ff88, 0xff3333];
+    const TREE_HEIGHT = 28;
+    const TREE_CONFIG = { radius: 8, particleCount: 18000, ribbonTurns: 8 };
+    const STATE = { CLOSED: 0, OPENING: 1, OPEN: 2, MORPH_MODE: 3 };
+    const STAGE = { TREE: 0, CAKE: 1, TEXT1: 2, TEXT2: 3, TEXT3: 4, TEXT4: 5 };
+
+    let currentState = STATE.CLOSED;
+    let currentStage = STAGE.TREE; 
+    let animProgress = 0, starScale = 0;
+    let clock = new THREE.Clock();
+    let isRotationPaused = false;
+    let isTransforming = false; 
+    let scene, camera, renderer, composer, controls, mainSpotlight;
+    let lidGroup, wallMesh, treeGroup, starMesh;
+    let particleMaterial, ribbonMaterial;
+    let snowGeo, snowPositions;
+    let ornamentsGroup = new THREE.Group();
+    let clickableOrnaments = [], swayingOrnaments = [], clickableBox = [];
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+    let cameraStartPos = new THREE.Vector3(), cameraTargetPos = new THREE.Vector3(0, 35, 85), cameraStartLookAt = new THREE.Vector3();
+    let cameraTextPos = new THREE.Vector3(0, 25, 110);
+    let cameraCakePos = new THREE.Vector3(0, 30, 100);
+
+    // --- LOCAL PHOTOS LOADING SETUP (FOR GITHUB PAGES) ---
+    const textureLoader = new THREE.TextureLoader();
+    // We don't strictly need setCrossOrigin for local files on the same server, but it's good practice.
+    textureLoader.setCrossOrigin('anonymous'); 
+    
+    // 【重要】這裡設定為自動讀取 photo1.jpg 到 photo25.jpg
+    // 請確保您的 25 張照片已重新命名並與此 index.html 檔案放在 GitHub 的同一個目錄下。
+    const photoTextures = [];
+    for (let i = 1; i <= 25; i++) {
+        // 這裡假設照片格式為 .jpg。如果是 .png，請將下方的 '.jpg' 改為 '.png'
+        photoTextures.push(textureLoader.load(`./photo${i}.jpg`));
+    }
+    // -----------------------------------------
+
+    const sphereGeo = new THREE.SphereGeometry(1.1, 24, 24);
+    const boxGeo = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+    const ribbonGeo = new THREE.BoxGeometry(1.6, 1.6, 0.2);
+    const starShape = new THREE.Shape(); for(let j=0;j<10;j++){const r=(j%2===0)?1.0:0.5;const a=j/10*Math.PI*2;j===0?starShape.moveTo(Math.cos(a)*r,Math.sin(a)*r):starShape.lineTo(Math.cos(a)*r,Math.sin(a)*r);}
+    const starExtrudeGeo = new THREE.ExtrudeGeometry(starShape,{depth:0.3, bevelEnabled:false});
+    const snowShape = new THREE.Shape(); for(let j=0;j<12;j++){const r=(j%2===0)?1.1:0.4;const a=j/12*Math.PI*2;j===0?snowShape.moveTo(Math.cos(a)*r,Math.sin(a)*r):snowShape.lineTo(Math.cos(a)*r,Math.sin(a)*r);}
+    const snowExtrudeGeo = new THREE.ExtrudeGeometry(snowShape,{depth:0.2, bevelEnabled:false});
+
+    function getGradientColor(t, targetColor) { if (t < 0.5) targetColor.copy(COLORS.treeGreen).lerp(COLORS.treeGold, t * 2.0); else targetColor.copy(COLORS.treeGold).lerp(COLORS.treeRose, (t - 0.5) * 2.0); return targetColor; }
+
+    function createGiftTexture(baseColorHex, ribbonColorHex) {
+        const canvas = document.createElement('canvas'); canvas.width = 64; canvas.height = 64; const ctx = canvas.getContext('2d');
+        ctx.fillStyle = new THREE.Color(baseColorHex).getStyle(); ctx.fillRect(0, 0, 64, 64);
+        ctx.fillStyle = new THREE.Color(ribbonColorHex).getStyle();
+        const w = 10; ctx.fillRect(32-w/2, 0, w, 64); ctx.fillRect(0, 32-w/2, 64, w);
+        return new THREE.CanvasTexture(canvas);
+    }
+
+    function sampleTextCoordinates(text, font, fontSize) {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const width = 1024; const height = 512;
+        canvas.width = width; canvas.height = height;
+        ctx.font = `${fontSize}px "${font}", cursive`;
+        ctx.fillStyle = 'white';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        const lines = text.split('\n');
+        const lineHeight = fontSize * 1.2;
+        const totalHeight = lines.length * lineHeight;
+        let startY = (height - totalHeight) / 2 + lineHeight / 2;
+        lines.forEach((line, index) => {
+             ctx.fillText(line, width / 2, startY + index * lineHeight);
+        });
+        const imageData = ctx.getImageData(0, 0, width, height);
+        const data = imageData.data;
+        const points = [];
+        for (let y = 0; y < height; y += 2) {
+            for (let x = 0; x < width; x += 2) {
+                const alpha = data[(y * width + x) * 4 + 3];
+                if (alpha > 128) {
+                    points.push(new THREE.Vector3(
+                        (x - width / 2) * 0.1,
+                        (height - y) * 0.1 - 5,
+                        (Math.random() - 0.5) * 2.0
+                    ));
+                }
+            }
+        }
+        return points;
+    }
+
+    function generateCakeCoordinates(count) {
+        const points = [];
+        const bottomRadius = 12; const bottomHeight = 7;
+        const topRadius = 8; const topHeight = 6;
+        const candleHeight = 2.5;
+        const flameHeight = bottomHeight + topHeight + candleHeight + 1;
+        for (let i = 0; i < count; i++) {
+            const rand = Math.random();
+            let pos = new THREE.Vector3();
+            if (rand < 0.5) { 
+                const r = bottomRadius * Math.sqrt(Math.random());
+                const a = Math.random() * Math.PI * 2;
+                pos.set(Math.cos(a)*r, Math.random()*bottomHeight, Math.sin(a)*r);
+            } else if (rand < 0.85) { 
+                const r = topRadius * Math.sqrt(Math.random());
+                const a = Math.random() * Math.PI * 2;
+                pos.set(Math.cos(a)*r, bottomHeight + Math.random()*topHeight, Math.sin(a)*r);
+            } else if (rand < 0.95) {
+                const r = 0.5 * Math.sqrt(Math.random());
+                const a = Math.random() * Math.PI * 2;
+                pos.set(Math.cos(a)*r, bottomHeight + topHeight + Math.random()*candleHeight, Math.sin(a)*r);
+            } else {
+                 pos.set(0, flameHeight + (Math.random()-0.5)*0.5, 0);
+            }
+            points.push(pos);
+        }
+        return points;
+    }
+
+    function init() {
+        const container = document.getElementById('canvas-container');
+        scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(0x020202, 0.008); 
+        camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 0.1, 500); camera.position.copy(cameraTargetPos);
+        renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+        renderer.setPixelRatio(window.devicePixelRatio); renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
+        container.appendChild(renderer.domElement);
+        controls = new OrbitControls(camera, renderer.domElement); controls.enableDamping = true; controls.minDistance = 30; controls.maxDistance = 130; controls.maxPolarAngle = Math.PI/2 - 0.05; controls.autoRotate = true; controls.autoRotateSpeed = 0.6;
+        scene.add(new THREE.AmbientLight(0xffffff, 0.2));
+        mainSpotlight = new THREE.SpotLight(0xffeebb, 600); mainSpotlight.position.set(0, 60, 0); mainSpotlight.target.position.set(0, 0, 0); mainSpotlight.angle = Math.PI/8; mainSpotlight.penumbra = 0.5; scene.add(mainSpotlight); scene.add(mainSpotlight.target);
+        scene.add(new THREE.PointLight(0x4444ff, 3, 100).translateY(20).translateX(-40)); scene.add(new THREE.PointLight(0xffaa00, 2, 80).translateY(10).translateZ(30));
+        createGround();
+        createSnow();
+        createLuxuryBox();
+        createSurroundingGifts();
+        document.fonts.ready.then(() => {
+             createCompleteTree();
+             animate();
+        });
+        const renderPass = new RenderPass(scene, camera);
+        const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 2.0, 0.5, 0.1);
+        composer = new EffectComposer(renderer); composer.addPass(renderPass); composer.addPass(bloomPass);
+        window.addEventListener('resize', onResize); window.addEventListener('click', onClick);
+        document.getElementById('photo-overlay').addEventListener('click', closeOverlay); document.getElementById('close-hint').addEventListener('click', closeOverlay); document.getElementById('start-hint').addEventListener('click', startOpening);
+    }
+
+    function createGround() {
+        const plane = new THREE.Mesh(new THREE.PlaneGeometry(500, 500), new THREE.MeshStandardMaterial({ color: 0x080808, roughness: 0.8, metalness: 0.2 }));
+        plane.rotation.x = -Math.PI/2; plane.position.y = -0.1; scene.add(plane);
+    }
+
+    function createSnow() {
+        snowGeo = new THREE.BufferGeometry();
+        const particleCount = 4000;
+        snowPositions = new Float32Array(particleCount * 3);
+        for(let i=0; i<particleCount; i++) { snowPositions[i*3] = (Math.random()-0.5)*400; snowPositions[i*3+1] = Math.random()*300; snowPositions[i*3+2] = (Math.random()-0.5)*400; }
+        snowGeo.setAttribute('position', new THREE.BufferAttribute(snowPositions, 3));
+        const snowMat = new THREE.PointsMaterial({color: 0xffffff, size: 0.6, transparent:true, opacity:0.8, blending: THREE.AdditiveBlending});
+        const snowSystem = new THREE.Points(snowGeo, snowMat);
+        scene.add(snowSystem);
+    }
+
+    function createSurroundingGifts() {
+        const ribbonColors = [0xffd700, 0xc0c0c0, 0xffffff];
+        for(let i=0; i<40; i++) {
+            const size = Math.pow(Math.random(), 1.5) * 3.0 + 1.2;
+            const boxG = new THREE.BoxGeometry(size, size, size);
+            const baseCol = SURROUNDING_PALETTE[Math.floor(Math.random()*SURROUNDING_PALETTE.length)];
+            const ribCol = ribbonColors[Math.floor(Math.random()*ribbonColors.length)];
+            const texture = createGiftTexture(baseCol, ribCol);
+            const mat = new THREE.MeshStandardMaterial({ map: texture, roughness: 0.4, metalness: 0.3 });
+            const box = new THREE.Mesh(boxG, mat);
+            const angle = Math.random() * Math.PI * 2;
+            const radius = 10 + Math.pow(Math.random(), 1.8) * 18; 
+            box.position.set(Math.cos(angle)*radius, size/2, Math.sin(angle)*radius);
+            box.rotation.set(Math.random()*0.2, Math.random()*Math.PI, Math.random()*0.2);
+            scene.add(box);
+        }
+    }
+
+    function createLuxuryBox() {
+        const R=14, H=16;
+        const satinRedMat = new THREE.MeshStandardMaterial({ color: COLORS.boxRichRed, roughness: 0.35, metalness: 0.15, side: THREE.DoubleSide, emissive: COLORS.boxRichRed, emissiveIntensity: 0.3 });
+        const polishedGoldMat = new THREE.MeshStandardMaterial({ color: COLORS.boxPolishedGold, roughness: 0.02, metalness: 1.0, emissive: COLORS.boxPolishedGold, emissiveIntensity: 0.2 });
+        wallMesh = new THREE.Mesh(new THREE.CylinderGeometry(R, R, H, 128), satinRedMat); wallMesh.position.y = H/2;
+        const bandGeo = new THREE.BoxGeometry(2.5, H+0.2, R*2.02);
+        wallMesh.add(new THREE.Mesh(bandGeo, polishedGoldMat)); wallMesh.add(new THREE.Mesh(bandGeo, polishedGoldMat).rotateY(Math.PI/2));
+        clickableBox.push(wallMesh); scene.add(wallMesh);
+        const lidPivot = new THREE.Group(); lidPivot.position.set(0, H, -R); 
+        lidGroup = new THREE.Group(); 
+        lidGroup.position.set(0, 0, R);
+        lidGroup.add(new THREE.Mesh(new THREE.CylinderGeometry(R+0.5, R+0.5, 3, 128), satinRedMat));
+        const lidBand = new THREE.Mesh(new THREE.BoxGeometry(2.7, 3.1, (R+0.5)*2.02), polishedGoldMat); lidGroup.add(lidBand); lidGroup.add(lidBand.clone().rotateY(Math.PI/2));
+        const bowGroup = new THREE.Group(); bowGroup.position.y = 1.8;
+        const knot = new THREE.Mesh(new THREE.SphereGeometry(1.5, 32, 32), polishedGoldMat); knot.scale.set(1, 0.8, 1.2); bowGroup.add(knot);
+        function createFlowingLoop(scale, rotZ) { const curve = new THREE.CatmullRomCurve3([new THREE.Vector3(0,0,0), new THREE.Vector3(scale, scale*0.8, 0), new THREE.Vector3(scale*1.8, 0, scale*0.5), new THREE.Vector3(scale, -scale*0.8, 0), new THREE.Vector3(0,0,0)], true, 'centripetal', 0.5); const shape = new THREE.Shape(); shape.moveTo(-0.1,-1.2); shape.lineTo(0.1,-1.2); shape.lineTo(0.1,1.2); shape.lineTo(-0.1,1.2); const geo = new THREE.ExtrudeGeometry(shape, { steps: 64, bevelEnabled: false, extrudePath: curve }); const mesh = new THREE.Mesh(geo, polishedGoldMat); mesh.rotation.z = rotZ; return mesh; }
+        bowGroup.add(createFlowingLoop(5.5, Math.PI/8)); bowGroup.add(createFlowingLoop(5.5, -Math.PI/8)); bowGroup.add(createFlowingLoop(-5.5, Math.PI/8)); bowGroup.add(createFlowingLoop(-5.5, -Math.PI/8));
+        const tailGeo = new THREE.BoxGeometry(2.4, 7, 0.1); tailGeo.translate(0, -3.5, 0);
+        const tail1 = new THREE.Mesh(tailGeo, polishedGoldMat); tail1.position.set(-1, 0, 1); tail1.rotation.set(0.3, 0, 0.4); const tail2 = new THREE.Mesh(tailGeo, polishedGoldMat); tail2.position.set(1, 0, 1); tail2.rotation.set(0.3, 0, -0.4);
+        bowGroup.add(tail1); bowGroup.add(tail2); lidGroup.add(bowGroup); lidPivot.add(lidGroup); clickableBox.push(lidGroup); lidGroup = lidPivot; scene.add(lidGroup);
+    }
+    
+    function createCompleteTree() {
+        treeGroup = new THREE.Group(); 
+        treeGroup.position.y = 0.1;
+        treeGroup.visible = false;
+        scene.add(treeGroup);
+        const ribbonPts = []; const ribbonSteps = 300;
+        for(let i=0; i<=ribbonSteps; i++){ const t = i/ribbonSteps; const r = TREE_CONFIG.radius * (1-t); const h = t * TREE_HEIGHT; const a = t * TREE_CONFIG.ribbonTurns * Math.PI * 2; ribbonPts.push(new THREE.Vector3(Math.cos(a)*r, h, Math.sin(a)*r)); }
+        const tubeGeo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(ribbonPts), ribbonSteps, 0.15, 8, false);
+        ribbonMaterial = new THREE.ShaderMaterial({
+            uniforms: { uProgress: { value: 0.0 }, uRibbonOpacity: { value: 1.0 } },
+            vertexShader: document.getElementById('ribbon-vs').textContent, fragmentShader: document.getElementById('ribbon-fs').textContent,
+            side: THREE.DoubleSide, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
+        });
+        treeGroup.add(new THREE.Mesh(tubeGeo, ribbonMaterial));
+
+        const textPoints1 = sampleTextCoordinates("Happy 19th Birthday\nJana", "Pacifico", 70);
+        const textPoints2 = sampleTextCoordinates("Wishing you joy,\nmagic, and love", "Pacifico", 60);
+        const textPoints3 = sampleTextCoordinates("follow your dreams", "Pacifico", 65);
+        const textPoints4 = sampleTextCoordinates("walk into the future\nwith light in your eyes", "Pacifico", 55);
+
+        const particleCount = TREE_CONFIG.particleCount;
+        const cakePoints = generateCakeCoordinates(particleCount);
+        const pGeo = new THREE.BufferGeometry(); 
+        const pPos = new Float32Array(particleCount * 3); 
+        const pTargetPosCake = new Float32Array(particleCount * 3);
+        const pTargetPos1 = new Float32Array(particleCount * 3);
+        const pTargetPos2 = new Float32Array(particleCount * 3);
+        const pTargetPos3 = new Float32Array(particleCount * 3);
+        const pTargetPos4 = new Float32Array(particleCount * 3);
+        const pCols = new Float32Array(particleCount * 3); 
+        const pSizes = new Float32Array(particleCount); 
+        const tempColor = new THREE.Color();
+
+        for (let i = 0; i < particleCount; i++) {
+            const t = Math.pow(Math.random(), 0.7); const y = t * TREE_HEIGHT; const rBase = TREE_CONFIG.radius * (1 - t) + 0.5; const r = rBase + (Math.random() - 0.5) * 2.0; const angle = Math.random() * Math.PI * 2;
+            pPos[i*3] = r*Math.cos(angle); pPos[i*3+1] = y; pPos[i*3+2] = r*Math.sin(angle);
+            const cp = cakePoints[i]; pTargetPosCake[i*3] = cp.x; pTargetPosCake[i*3+1] = cp.y; pTargetPosCake[i*3+2] = cp.z;
+            if (textPoints1.length > 0) { const tp = textPoints1[i % textPoints1.length]; pTargetPos1[i*3] = tp.x; pTargetPos1[i*3+1] = tp.y; pTargetPos1[i*3+2] = tp.z; }
+            if (textPoints2.length > 0) { const tp = textPoints2[i % textPoints2.length]; pTargetPos2[i*3] = tp.x; pTargetPos2[i*3+1] = tp.y; pTargetPos2[i*3+2] = tp.z; }
+            if (textPoints3.length > 0) { const tp = textPoints3[i % textPoints3.length]; pTargetPos3[i*3] = tp.x; pTargetPos3[i*3+1] = tp.y; pTargetPos3[i*3+2] = tp.z; }
+            if (textPoints4.length > 0) { const tp = textPoints4[i % textPoints4.length]; pTargetPos4[i*3] = tp.x; pTargetPos4[i*3+1] = tp.y; pTargetPos4[i*3+2] = tp.z; }
+            getGradientColor(t, tempColor); const variation = Math.random()*0.5+0.5; pCols[i*3]=tempColor.r*variation; pCols[i*3+1]=tempColor.g*variation; pCols[i*3+2]=tempColor.b*variation;
+            pSizes[i] = Math.random() * 0.8 + 0.4;
+        }
+        pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3)); 
+        pGeo.setAttribute('aTargetPositionCake', new THREE.BufferAttribute(pTargetPosCake, 3));
+        pGeo.setAttribute('aTargetPosition', new THREE.BufferAttribute(pTargetPos1, 3));
+        pGeo.setAttribute('aTargetPosition2', new THREE.BufferAttribute(pTargetPos2, 3));
+        pGeo.setAttribute('aTargetPosition3', new THREE.BufferAttribute(pTargetPos3, 3));
+        pGeo.setAttribute('aTargetPosition4', new THREE.BufferAttribute(pTargetPos4, 3));
+        pGeo.setAttribute('color', new THREE.BufferAttribute(pCols, 3)); 
+        pGeo.setAttribute('size', new THREE.BufferAttribute(pSizes, 1));
+        
+        particleMaterial = new THREE.ShaderMaterial({
+            uniforms: { uTime: { value: 0 }, rendererHeight: { value: window.innerHeight }, uGrowth: { value: 0.0 }, uMorphState: { value: 0.0 }, uReturning: { value: 0.0 } },
+            vertexShader: document.getElementById('particle-vs').textContent, fragmentShader: document.getElementById('particle-fs').textContent,
+            transparent: true, blending: THREE.AdditiveBlending, depthWrite: false
+        });
+        treeGroup.add(new THREE.Points(pGeo, particleMaterial));
+
+        const starShapeTop = new THREE.Shape(); for(let i=0;i<10;i++){const r=(i%2===0)?2.5:1.0; const a=i/10*Math.PI*2; i===0?starShapeTop.moveTo(Math.cos(a)*r,Math.sin(a)*r):starShapeTop.lineTo(Math.cos(a)*r,Math.sin(a)*r);}
+        starMesh = new THREE.Mesh(new THREE.ExtrudeGeometry(starShapeTop,{depth:0.8,bevelEnabled:true,bevelSize:0.3}), new THREE.MeshStandardMaterial({color:COLORS.star, emissive:COLORS.star, emissiveIntensity: 2.5, roughness: 0.1, metalness: 0.9}));
+        starMesh.position.y = TREE_HEIGHT + 1.5; starMesh.scale.set(0,0,0); treeGroup.add(starMesh);
+        starMesh.userData.isClickable = false;
+
+        createOrnaments(TREE_HEIGHT, TREE_CONFIG.radius);
+        ornamentsGroup.visible = false;
+        treeGroup.add(ornamentsGroup);
+    }
+
+    function createOrnaments(height, maxR) {
+        ornamentsGroup.visible = false;
+        const goldMat = new THREE.MeshStandardMaterial({ color: 0xffdd44, metalness: 0.8, roughness: 0.2, emissive: 0x553300, emissiveIntensity: 0.4 });
+        const lineMat = new THREE.LineBasicMaterial({ color: 0x886644, transparent: true, opacity: 0.6 });
+        for(let i=0; i<25; i++) { 
+            const color = ORNAMENT_PALETTE[i % ORNAMENT_PALETTE.length]; 
+            const mat = new THREE.MeshPhysicalMaterial({ color: color, metalness: 0.6, roughness: 0.1, clearcoat: 1.0, emissive: color, emissiveIntensity: 0.5 });
+            let mesh; const type = i % 4;
+            if(type === 0) mesh = new THREE.Mesh(sphereGeo, mat); else if (type === 1) { mesh = new THREE.Group(); mesh.add(new THREE.Mesh(boxGeo, mat)); const r = new THREE.Mesh(ribbonGeo, goldMat); mesh.add(r); mesh.add(r.clone().rotateY(Math.PI/2)); } else if (type === 2) mesh = new THREE.Mesh(starExtrudeGeo, goldMat); 
+            else mesh = new THREE.Mesh(snowExtrudeGeo, new THREE.MeshPhysicalMaterial({ color: 0xffffff, transmission: 1.0, opacity: 1, roughness: 0.05, ior: 1.5, emissive: 0x88ccee, emissiveIntensity: 0.4 }));
+            const t = Math.random() * 0.8 + 0.1; const h = t * height; const rBase = maxR * (1 - t) + 0.5; const r = rBase + (Math.random()-0.5) * 2.0; const angle = Math.random() * Math.PI * 2;
+            const finalPos = new THREE.Vector3(Math.cos(angle)*r, h, Math.sin(angle)*r); const anchorPos = finalPos.clone(); anchorPos.y += Math.random() * 1.5 + 0.5;
+            mesh.position.copy(finalPos); mesh.lookAt(mesh.position.x*2, h, mesh.position.z*2);
+            // Cycle through the 25 unique photos
+            const plane = new THREE.Mesh(new THREE.PlaneGeometry(1.3, 1.3), new THREE.MeshBasicMaterial({map: photoTextures[i % 25]})); 
+            plane.position.z = 0.6; if(type===1) plane.position.z = 0.8; if(type===0) mesh.add(plane); else if (type===1) mesh.children[0].add(plane); else mesh.add(plane);
+            mesh.userData = { swaySpeed: 1+Math.random(), swayOff: Math.random()*6, baseRotX: mesh.rotation.x, triggerHeight: t }; mesh.scale.set(0,0,0); swayingOrnaments.push(mesh); clickableOrnaments.push(plane); ornamentsGroup.add(mesh);
+            const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints([anchorPos, finalPos]), lineMat); ornamentsGroup.add(line);
+        }
+    }
+
+    function onClick(e) {
+        if(e.target.id==='start-hint' || e.target.id==='close-hint' || document.getElementById('photo-overlay').classList.contains('active')) return;
+        mouse.x=(e.clientX/window.innerWidth)*2-1; mouse.y=-(e.clientY/window.innerHeight)*2+1; raycaster.setFromCamera(mouse,camera);
+        if(currentState===STATE.CLOSED && raycaster.intersectObjects(clickableBox,true).length>0) {
+             startOpening();
+        } else if(currentState===STATE.OPEN && !isTransforming) { 
+            const starIntersects = raycaster.intersectObject(starMesh);
+            if (starIntersects.length > 0 && starMesh.userData.isClickable) {
+                transformToCake(); 
+            } else {
+                const its=raycaster.intersectObjects(clickableOrnaments); 
+                if(its.length>0) openOverlay(its[0].object.material.map.image); 
+            }
+        } else if (currentState === STATE.MORPH_MODE && !isTransforming) {
+            if (!document.getElementById('photo-overlay').classList.contains('active')) {
+                 if (currentStage === STAGE.CAKE) transformToText1();
+                 else if (currentStage === STAGE.TEXT1) transformToText2();
+                 else if (currentStage === STAGE.TEXT2) transformToText3();
+                 else if (currentStage === STAGE.TEXT3) transformToText4();
+                 else if (currentStage === STAGE.TEXT4) restoreTree(); 
+            }
+        }
+    }
+
+    function startOpening() { if(currentState!==STATE.CLOSED)return; currentState=STATE.OPENING; cameraStartPos.copy(camera.position); camera.getWorldDirection(cameraStartLookAt); cameraStartLookAt.add(cameraStartPos); document.getElementById('start-hint').style.opacity=0; setTimeout(()=>document.getElementById('start-hint').remove(),800); new TWEEN.Tween(mainSpotlight).to({intensity:2500, angle: Math.PI/6}, 2500).start(); }
+    
+    function transformToCake() {
+        isTransforming = true; currentState = STATE.MORPH_MODE; currentStage = STAGE.CAKE; isRotationPaused = true; starMesh.userData.isClickable = false; 
+        new TWEEN.Tween(ribbonMaterial.uniforms.uRibbonOpacity).to({value: 0.0}, 1000).start();
+        new TWEEN.Tween(ornamentsGroup.scale).to({x: 0, y: 0, z: 0}, 800).start();
+        new TWEEN.Tween(starMesh.scale).to({x: 0, y: 0, z: 0}, 800).start();
+        new TWEEN.Tween(particleMaterial.uniforms.uMorphState).to({value: 1.0}, 3000).easing(TWEEN.Easing.Cubic.InOut).onComplete(() => { 
+            isTransforming = false; 
+            document.getElementById('candle-hint').classList.add('active');
+        }).start();
+        new TWEEN.Tween(camera.position).to({x: cameraCakePos.x, y: cameraCakePos.y, z: cameraCakePos.z}, 2500).easing(TWEEN.Easing.Quadratic.InOut).start();
+    }
+
+    function transformToText1() {
+        document.getElementById('candle-hint').classList.remove('active');
+        isTransforming = true; currentStage = STAGE.TEXT1;
+        new TWEEN.Tween(particleMaterial.uniforms.uMorphState).to({value: 2.0}, 3500).easing(TWEEN.Easing.Back.Out).onComplete(() => { isTransforming = false; }).start();
+        new TWEEN.Tween(camera.position).to({x: cameraTextPos.x, y: cameraTextPos.y, z: cameraTextPos.z}, 3000).easing(TWEEN.Easing.Quadratic.InOut).start();
+    }
+    function transformToText2() {
+        isTransforming = true; currentStage = STAGE.TEXT2;
+        new TWEEN.Tween(particleMaterial.uniforms.uMorphState).to({value: 3.0}, 3500).easing(TWEEN.Easing.Cubic.InOut).onComplete(() => { isTransforming = false; }).start();
+    }
+    function transformToText3() {
+        isTransforming = true; currentStage = STAGE.TEXT3;
+        new TWEEN.Tween(particleMaterial.uniforms.uMorphState).to({value: 4.0}, 3500).easing(TWEEN.Easing.Cubic.InOut).onComplete(() => { isTransforming = false; }).start();
+    }
+    function transformToText4() {
+        isTransforming = true; currentStage = STAGE.TEXT4;
+        new TWEEN.Tween(particleMaterial.uniforms.uMorphState).to({value: 5.0}, 3500).easing(TWEEN.Easing.Cubic.InOut).onComplete(() => { isTransforming = false; }).start();
+    }
+
+    function restoreTree() {
+        isTransforming = true;
+        currentStage = STAGE.TREE;
+        particleMaterial.uniforms.uReturning.value = 1.0;
+        new TWEEN.Tween(ribbonMaterial.uniforms.uRibbonOpacity).to({value: 1.0}, 1500).delay(200).start();
+        new TWEEN.Tween(ornamentsGroup.scale).to({x: 1, y: 1, z: 1}, 1500).delay(200).start();
+        new TWEEN.Tween(starMesh.scale).to({x: 1, y: 1, z: 1}, 1500).delay(200).start();
+        new TWEEN.Tween(particleMaterial.uniforms.uMorphState)
+            .to({value: 0.0}, 1500)
+            .easing(TWEEN.Easing.Quadratic.InOut)
+            .onComplete(() => { 
+                isTransforming = false; 
+                currentState = STATE.OPEN;
+                isRotationPaused = false;
+                starMesh.userData.isClickable = true; 
+                particleMaterial.uniforms.uReturning.value = 0.0;
+            })
+            .start();
+        new TWEEN.Tween(camera.position).to({x: cameraTargetPos.x, y: cameraTargetPos.y, z: cameraTargetPos.z}, 1500).easing(TWEEN.Easing.Quadratic.InOut).start();
+    }
+
+    function openOverlay(img) { isRotationPaused=true; document.getElementById('overlay-img').src=img.toDataURL(); document.getElementById('photo-overlay').classList.add('active'); }
+    function closeOverlay(e) { document.getElementById('photo-overlay').classList.remove('active'); if(currentState === STATE.OPEN) isRotationPaused=false; }
+    function onResize() { camera.aspect=window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth,window.innerHeight); composer.setSize(window.innerWidth,window.innerHeight); if(particleMaterial) particleMaterial.uniforms.rendererHeight.value = window.innerHeight; }
+    const TWEEN={tweens:[],update(){this.tweens.forEach(t=>t.update(clock.getElapsedTime()));this.tweens=this.tweens.filter(t=>!t.done);},Easing:{Linear:{None:function(k){return k;}},Quadratic:{InOut:function(k){if((k*=2)<1)return 0.5*k*k;return-0.5*(--k*(k-2)-1);}},Back:{Out:function(k){const s=1.70158;return--k*k*((s+1)*k+s)+1;}},Cubic:{InOut:function(k){if((k*=2)<1)return 0.5*k*k*k;return 0.5*((k-=2)*k*k+2);}}},Tween:function(o){this.o=o;this.done=false;this._easing=TWEEN.Easing.Linear.None;this._onComplete=null;this._delay=0;this.to=function(t,d){this.t=t;this.d=d/1000;this.sT=-1;return this;};this.easing=function(e){this._easing=e;return this;};this.delay=function(d){this._delay=d/1000;return this;};this.onComplete=function(c){this._onComplete=c;return this;};this.start=function(){this.sT=clock.getElapsedTime()+this._delay;this.sV={};for(let k in this.t)this.sV[k]=this.o[k];TWEEN.tweens.push(this);};this.update=function(t){if(t<this.sT)return;let p=Math.min(1,(t-this.sT)/this.d);let e=this._easing(p);for(let k in this.t)this.o[k]=this.sV[k]+(this.t[k]-this.sV[k])*e;if(p===1){this.done=true;if(this._onComplete)this._onComplete();}}}};
+    function smoothstep(edge0, edge1, x) { x = Math.max(0, Math.min(1, (x - edge0) / (edge1 - edge0))); return x * x * (3 - 2 * x); }
+
+    function animate() {
+        requestAnimationFrame(animate); const time=clock.getElapsedTime(); TWEEN.update();
+        if(particleMaterial) particleMaterial.uniforms.uTime.value = time;
+        if(snowPositions) {
+            for(let i = 0; i < snowPositions.length; i+=3) {
+                snowPositions[i+1] -= 0.2 + Math.random() * 0.1;
+                snowPositions[i] += Math.sin(time + snowPositions[i+1] * 0.05) * 0.05;
+                if(snowPositions[i+1] < -10) snowPositions[i+1] = 300;
+            }
+            snowGeo.attributes.position.needsUpdate = true;
+        }
+        if(currentState === STATE.OPENING) {
+            animProgress += 0.006; const overallProgress = smoothstep(0, 1, animProgress);
+            camera.position.lerpVectors(cameraStartPos, cameraTargetPos, overallProgress); const currentLookAt = new THREE.Vector3().lerpVectors(cameraStartLookAt, new THREE.Vector3(0, 15, 0), overallProgress); camera.lookAt(currentLookAt);
+            const boxProgress = Math.min(1, animProgress * 1.2); const easeBox = smoothstep(0, 1, boxProgress);
+            lidGroup.rotation.x = -Math.PI/1.3 * easeBox; lidGroup.position.set(0, 16+boxProgress*20, -14-boxProgress*20); 
+            wallMesh.scale.y = 1 - easeBox; wallMesh.position.y = (8 * (1-easeBox));
+            if(boxProgress>=1) wallMesh.visible = lidGroup.visible = false;
+            if(animProgress > 0.15) {
+                if (!treeGroup.visible) treeGroup.visible = true;
+                const treeProgressRaw = (animProgress - 0.15) / 0.85; const treeProgress = smoothstep(0, 1, treeProgressRaw);
+                particleMaterial.uniforms.uGrowth.value = treeProgress;
+                if(ribbonMaterial) ribbonMaterial.uniforms.uProgress.value = treeProgress;
+                if(treeProgress > 0.01 && currentState !== STATE.MORPH_MODE) ornamentsGroup.visible = true;
+                swayingOrnaments.forEach(orn => { if(treeProgress >= orn.userData.triggerHeight) orn.scale.lerp(new THREE.Vector3(1,1,1), 0.05); });
+                if(treeProgress >= 0.95) { starScale = Math.min(1, starScale + 0.03); starMesh.scale.setScalar(starScale * (0.5 + Math.sin(time*15)*0.1)); }
+            }
+            if(animProgress >= 1.1 && starScale >= 0.9) {
+                 currentState = STATE.OPEN;
+                 if (starMesh) starMesh.userData.isClickable = true;
+            }
+        } else if (currentState === STATE.OPEN) {
+            if(!isRotationPaused) { treeGroup.rotation.y += 0.002; starMesh.scale.setScalar(0.5 + Math.sin(time*8)*0.1); swayingOrnaments.forEach(o => o.rotation.x = o.userData.baseRotX + Math.sin(time*o.userData.swaySpeed+o.userData.swayOff)*0.15); }
+        } else if (currentState === STATE.MORPH_MODE) {
+             camera.lookAt(0, 15, 0);
+        }
+        if(currentState !== STATE.OPENING) controls.update(); composer.render();
+    }
+    init();
+</script>
+</body>
+</html>
