@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Magical Christmas Tree - Happy 19th Birthday Jana</title>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     
     <style>
-        body { margin: 0; overflow: hidden; background-color: #000000; font-family: 'Segoe UI', sans-serif; }
+        /* 【修改】加入 touch-action: none 防止手機瀏覽器預設的縮放和滾動干擾 3D 操作 */
+        body { margin: 0; overflow: hidden; background-color: #000000; font-family: 'Segoe UI', sans-serif; touch-action: none; }
         #canvas-container { width: 100%; height: 100vh; display: block; }
         .ui-layer { position: absolute; pointer-events: none; width: 100%; height: 100%; top: 0; left: 0; display: flex; justify-content: center; align-items: center; z-index: 10; }
-        #start-hint { color: #fff; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 4px; background: rgba(0,0,0,0.6); padding: 15px 40px; border: 2px solid #d4af37; border-radius: 4px; box-shadow: 0 0 30px rgba(212, 175, 55, 0.5); transition: opacity 0.8s, transform 0.3s; cursor: pointer; pointer-events: auto; }
+        /* 【修改】增加按鈕在手機上的點擊區域和游標樣式 */
+        #start-hint { color: #fff; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 4px; background: rgba(0,0,0,0.6); padding: 15px 40px; border: 2px solid #d4af37; border-radius: 4px; box-shadow: 0 0 30px rgba(212, 175, 55, 0.5); transition: opacity 0.8s, transform 0.3s; cursor: pointer; pointer-events: auto; -webkit-tap-highlight-color: transparent; }
         #start-hint:hover { transform: scale(1.05); background: rgba(50, 40, 0, 0.7); }
         
         /* Polaroid Style Lightbox CSS */
@@ -19,11 +21,11 @@
         #overlay-content { display: flex; flex-direction: column; align-items: center; max-width: 80%; max-height: 85%; background-color: #fff; padding: 15px 15px 60px 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: rotate(-2deg); transition: transform 0.3s ease; }
         #photo-overlay.active #overlay-content { transform: rotate(-2deg) scale(1); }
         #overlay-img { max-width: 100%; max-height: 70vh; border: 1px solid #ddd; box-shadow: inset 0 0 10px rgba(0,0,0,0.1); display: block; }
-        #close-hint { position: absolute; bottom: 15px; width: 100%; text-align: center; color: #333; font-family: 'Comic Sans MS', 'Brush Script MT', cursive, sans-serif; font-size: 1.2rem; letter-spacing: 1px; cursor: pointer; }
+        #close-hint { position: absolute; bottom: 15px; width: 100%; text-align: center; color: #333; font-family: 'Comic Sans MS', 'Brush Script MT', cursive, sans-serif; font-size: 1.2rem; letter-spacing: 1px; cursor: pointer; padding: 10px; }
         #close-hint:hover { text-decoration: underline; }
         
         /* Hint for candle interaction */
-        #candle-hint { position: absolute; top: 15%; width: 100%; text-align: center; color: #fff; font-family: 'Pacifico', cursive; font-size: 2.5rem; opacity: 0; transition: opacity 0.5s; pointer-events: none; text-shadow: 0 0 15px #ffaa00; z-index: 20; line-height: 1.3; }
+        #candle-hint { position: absolute; top: 15%; width: 100%; text-align: center; color: #fff; font-family: 'Pacifico', cursive; font-size: 2.5rem; opacity: 0; transition: opacity 0.5s; pointer-events: none; text-shadow: 0 0 15px #ffaa00; z-index: 20; line-height: 1.3; padding: 0 20px; }
         #candle-hint.active { opacity: 1; }
     </style>
 </head>
@@ -32,12 +34,12 @@
 <div id="canvas-container"></div>
 <div class="ui-layer">
     <div id="start-hint">Open the gift</div>
-    <div id="candle-hint">Make a wish<br>click to blow out the candle!</div>
+    <div id="candle-hint">Make a wish<br>tap to blow out the candle!</div>
 </div>
 <div id="photo-overlay">
     <div id="overlay-content">
         <img id="overlay-img" src="">
-        <div id="close-hint">Click to close memories</div>
+        <div id="close-hint">Tap to close memories</div>
     </div>
 </div>
 
@@ -225,9 +227,7 @@
     const textureLoader = new THREE.TextureLoader();
     textureLoader.setCrossOrigin('anonymous'); 
     
-    const photoTextures = [];
-    // REMEMBER: You need to have photo1.jpg, photo2.jpg... up to photo25.jpg in the same folder.
-    // If you don't have them, they will appear black.
+  const photoTextures = [];
     for (let i = 1; i <= 27; i++) {
         photoTextures.push(textureLoader.load(`./photo${i}.jpg`));
     }
@@ -319,7 +319,9 @@
         scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(0x020202, 0.008); 
         camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 0.1, 500); camera.position.copy(cameraTargetPos);
         renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
-        renderer.setPixelRatio(window.devicePixelRatio); renderer.setSize(window.innerWidth, window.innerHeight);
+        // 【修改】調高像素比以獲得更清晰的渲染，尤其是在高解析度手機上
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); 
+        renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
         container.appendChild(renderer.domElement);
         controls = new OrbitControls(camera, renderer.domElement); controls.enableDamping = true; controls.minDistance = 30; controls.maxDistance = 130; controls.maxPolarAngle = Math.PI/2 - 0.05; controls.autoRotate = true; controls.autoRotateSpeed = 0.6;
@@ -343,15 +345,27 @@
         const renderPass = new RenderPass(scene, camera);
         const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 2.0, 0.5, 0.1);
         composer = new EffectComposer(renderer); composer.addPass(renderPass); composer.addPass(bloomPass);
-        window.addEventListener('resize', onResize); window.addEventListener('click', onClick);
+        window.addEventListener('resize', onResize);
+
+        // 【關鍵修改】同時監聽滑鼠點擊和手機觸控結束事件
+        window.addEventListener('click', onClick);
+        window.addEventListener('touchend', onClick);
+
         document.getElementById('photo-overlay').addEventListener('click', closeOverlay); document.getElementById('close-hint').addEventListener('click', closeOverlay); 
         
-        document.getElementById('start-hint').addEventListener('click', function() {
-            startOpening();
-            const bgm = document.getElementById('bgm');
-            bgm.volume = 0.5; 
-            bgm.play().catch(e => console.log("背景音樂播放失敗，可能需要使用者更多互動:", e));
-        });
+        // 手機按鈕也添加 touchend 監聽，以獲得更快的反應
+        const startBtn = document.getElementById('start-hint');
+        startBtn.addEventListener('click', handleStartClick);
+        startBtn.addEventListener('touchend', handleStartClick);
+    }
+
+    // 【新增】獨立的開始按鈕處理函式，避免重複觸發
+    function handleStartClick(e) {
+        e.preventDefault(); // 防止同時觸發 click 和 touchend
+        startOpening();
+        const bgm = document.getElementById('bgm');
+        bgm.volume = 0.5; 
+        bgm.play().catch(e => console.log("背景音樂播放失敗，可能需要使用者更多互動:", e));
     }
 
     function createGround() {
@@ -488,7 +502,7 @@
         ornamentsGroup.visible = false;
         const goldMat = new THREE.MeshStandardMaterial({ color: 0xffdd44, metalness: 0.8, roughness: 0.2, emissive: 0x553300, emissiveIntensity: 0.4 });
         const lineMat = new THREE.LineBasicMaterial({ color: 0x886644, transparent: true, opacity: 0.6 });
-        for(let i=0; i<28; i++) { 
+        for(let i=0; i<27; i++) { 
             const color = ORNAMENT_PALETTE[i % ORNAMENT_PALETTE.length]; 
             const mat = new THREE.MeshPhysicalMaterial({ color: color, metalness: 0.6, roughness: 0.1, clearcoat: 1.0, emissive: color, emissiveIntensity: 0.5 });
             let mesh; const type = i % 4;
@@ -497,8 +511,6 @@
             const t = Math.random() * 0.8 + 0.1; const h = t * height; const rBase = maxR * (1 - t) + 0.5; const r = rBase + (Math.random()-0.5) * 2.0; const angle = Math.random() * Math.PI * 2;
             const finalPos = new THREE.Vector3(Math.cos(angle)*r, h, Math.sin(angle)*r); const anchorPos = finalPos.clone(); anchorPos.y += Math.random() * 1.5 + 0.5;
             mesh.position.copy(finalPos); mesh.lookAt(mesh.position.x*2, h, mesh.position.z*2);
-            // Cycle through the 25 unique photos
-            // FIX: Changed from MeshBasicMaterial to MeshStandardMaterial with roughness to prevent overexposure
             const plane = new THREE.Mesh(new THREE.PlaneGeometry(1.3, 1.3), new THREE.MeshStandardMaterial({map: photoTextures[i % 25], roughness: 0.7, metalness: 0.0})); 
             plane.position.z = 0.6; if(type===1) plane.position.z = 0.8; if(type===0) mesh.add(plane); else if (type===1) mesh.children[0].add(plane); else mesh.add(plane);
             mesh.userData = { swaySpeed: 1+Math.random(), swayOff: Math.random()*6, baseRotX: mesh.rotation.x, triggerHeight: t }; mesh.scale.set(0,0,0); swayingOrnaments.push(mesh); clickableOrnaments.push(plane); ornamentsGroup.add(mesh);
@@ -506,9 +518,30 @@
         }
     }
 
+    // 【關鍵修改】重新編寫 onClick 以支援滑鼠和觸控
     function onClick(e) {
+        // 忽略 UI 元素上的點擊
         if(e.target.id==='start-hint' || e.target.id==='close-hint' || document.getElementById('photo-overlay').classList.contains('active')) return;
-        mouse.x=(e.clientX/window.innerWidth)*2-1; mouse.y=-(e.clientY/window.innerHeight)*2+1; raycaster.setFromCamera(mouse,camera);
+        
+        let clientX, clientY;
+
+        // 檢查是否為觸控事件
+        if(e.changedTouches && e.changedTouches.length > 0) {
+            // 取第一個觸控點
+            clientX = e.changedTouches[0].clientX;
+            clientY = e.changedTouches[0].clientY;
+        } else {
+            // 否則使用滑鼠座標
+            clientX = e.clientX;
+            clientY = e.clientY;
+        }
+
+        // 將螢幕座標轉換為 Three.js 世界座標
+        mouse.x = (clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(clientY / window.innerHeight) * 2 + 1;
+        raycaster.setFromCamera(mouse,camera);
+
+        // 接下來的邏輯與原本相同
         if(currentState===STATE.CLOSED && raycaster.intersectObjects(clickableBox,true).length>0) {
              // 手動觸發在 init() 中處理
         } else if(currentState===STATE.OPEN && !isTransforming) { 
