@@ -42,8 +42,7 @@
 </div>
 
 <audio id="bgm" loop hidden>
-    <source src="./Sia - Snowman (Lyrics).mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
+    <source src="./bgm.mp3" type="audio/mpeg">
 </audio>
 
 <script type="x-shader/x-vertex" id="ribbon-vs">
@@ -210,7 +209,6 @@
     let isTransforming = false; 
     let scene, camera, renderer, composer, controls, mainSpotlight;
     let lidGroup, wallMesh, treeGroup, starMesh;
-    // 【新增變數】masterGroup 用來裝載所有場景物體，方便統一移動
     let masterGroup;
     let particleMaterial, ribbonMaterial;
     let snowGeo, snowPositions;
@@ -326,18 +324,15 @@
         mainSpotlight = new THREE.SpotLight(0xffeebb, 600); mainSpotlight.position.set(0, 60, 0); mainSpotlight.target.position.set(0, 0, 0); mainSpotlight.angle = Math.PI/8; mainSpotlight.penumbra = 0.5; scene.add(mainSpotlight); scene.add(mainSpotlight.target);
         scene.add(new THREE.PointLight(0x4444ff, 3, 100).translateY(20).translateX(-40)); scene.add(new THREE.PointLight(0xffaa00, 2, 80).translateY(10).translateZ(30));
         
-        // 【新增功能 2：整體向下移動】
-        // 建立一個母群組，將所有物體放入其中，然後移動這個群組
         masterGroup = new THREE.Group();
-        // 將 Y 設為負值，場景就會向下移動。試試看 -15，您可以根據需要調整這個數字。
-        masterGroup.position.y = -10; 
+        masterGroup.position.y = -15; 
         scene.add(masterGroup);
 
-        // 注意：接下來的建立函式中，我們改用 masterGroup.add 而不是 scene.add
         createGround();
         createSnow();
         createLuxuryBox();
         createSurroundingGifts();
+
         document.fonts.ready.then(() => {
              createCompleteTree();
              animate();
@@ -348,13 +343,10 @@
         window.addEventListener('resize', onResize); window.addEventListener('click', onClick);
         document.getElementById('photo-overlay').addEventListener('click', closeOverlay); document.getElementById('close-hint').addEventListener('click', closeOverlay); 
         
-        // 【修改點擊事件：加入音樂播放】
         document.getElementById('start-hint').addEventListener('click', function() {
             startOpening();
-            // 找到音樂元素並播放
             const bgm = document.getElementById('bgm');
-            bgm.volume = 0.5; // 設定音量 (0.0 到 1.0)
-            // 使用 .catch 處理可能因為瀏覽器策略導致的自動播放失敗
+            bgm.volume = 0.5; 
             bgm.play().catch(e => console.log("背景音樂播放失敗，可能需要使用者更多互動:", e));
         });
     }
@@ -362,7 +354,6 @@
     function createGround() {
         const plane = new THREE.Mesh(new THREE.PlaneGeometry(500, 500), new THREE.MeshStandardMaterial({ color: 0x080808, roughness: 0.8, metalness: 0.2 }));
         plane.rotation.x = -Math.PI/2; plane.position.y = -0.1; 
-        // 【修改】改為加到 masterGroup
         masterGroup.add(plane);
     }
 
@@ -374,7 +365,6 @@
         snowGeo.setAttribute('position', new THREE.BufferAttribute(snowPositions, 3));
         const snowMat = new THREE.PointsMaterial({color: 0xffffff, size: 0.6, transparent:true, opacity:0.8, blending: THREE.AdditiveBlending});
         const snowSystem = new THREE.Points(snowGeo, snowMat);
-        // 【修改】改為加到 masterGroup
         masterGroup.add(snowSystem);
     }
 
@@ -392,7 +382,6 @@
             const radius = 10 + Math.pow(Math.random(), 1.8) * 18; 
             box.position.set(Math.cos(angle)*radius, size/2, Math.sin(angle)*radius);
             box.rotation.set(Math.random()*0.2, Math.random()*Math.PI, Math.random()*0.2);
-            // 【修改】改為加到 masterGroup
             masterGroup.add(box);
         }
     }
@@ -405,7 +394,6 @@
         const bandGeo = new THREE.BoxGeometry(2.5, H+0.2, R*2.02);
         wallMesh.add(new THREE.Mesh(bandGeo, polishedGoldMat)); wallMesh.add(new THREE.Mesh(bandGeo, polishedGoldMat).rotateY(Math.PI/2));
         clickableBox.push(wallMesh); 
-        // 【修改】改為加到 masterGroup
         masterGroup.add(wallMesh);
         const lidPivot = new THREE.Group(); lidPivot.position.set(0, H, -R); 
         lidGroup = new THREE.Group(); 
@@ -419,15 +407,14 @@
         const tailGeo = new THREE.BoxGeometry(2.4, 7, 0.1); tailGeo.translate(0, -3.5, 0);
         const tail1 = new THREE.Mesh(tailGeo, polishedGoldMat); tail1.position.set(-1, 0, 1); tail1.rotation.set(0.3, 0, 0.4); const tail2 = new THREE.Mesh(tailGeo, polishedGoldMat); tail2.position.set(1, 0, 1); tail2.rotation.set(0.3, 0, -0.4);
         bowGroup.add(tail1); bowGroup.add(tail2); lidGroup.add(bowGroup); lidPivot.add(lidGroup); clickableBox.push(lidGroup); lidGroup = lidPivot; 
-        // 【修改】改為加到 masterGroup
         masterGroup.add(lidGroup);
     }
     
     function createCompleteTree() {
         treeGroup = new THREE.Group(); 
-        treeGroup.position.y = 0.1;
+        treeGroup.position.y = -2.5; 
+        treeGroup.scale.set(1.4, 1.4, 1.4);
         treeGroup.visible = false;
-        // 【修改】改為加到 masterGroup
         masterGroup.add(treeGroup);
         const ribbonPts = []; const ribbonSteps = 300;
         for(let i=0; i<=ribbonSteps; i++){ const t = i/ribbonSteps; const r = TREE_CONFIG.radius * (1-t); const h = t * TREE_HEIGHT; const a = t * TREE_CONFIG.ribbonTurns * Math.PI * 2; ribbonPts.push(new THREE.Vector3(Math.cos(a)*r, h, Math.sin(a)*r)); }
@@ -519,7 +506,7 @@
         if(e.target.id==='start-hint' || e.target.id==='close-hint' || document.getElementById('photo-overlay').classList.contains('active')) return;
         mouse.x=(e.clientX/window.innerWidth)*2-1; mouse.y=-(e.clientY/window.innerHeight)*2+1; raycaster.setFromCamera(mouse,camera);
         if(currentState===STATE.CLOSED && raycaster.intersectObjects(clickableBox,true).length>0) {
-             // 這裡不需要手動呼叫 startOpening，因為上面的事件監聽器已經處理了
+             // 手動觸發在 init() 中處理
         } else if(currentState===STATE.OPEN && !isTransforming) { 
             const starIntersects = raycaster.intersectObject(starMesh);
             if (starIntersects.length > 0 && starMesh.userData.isClickable) {
@@ -593,7 +580,6 @@
         new TWEEN.Tween(camera.position).to({x: cameraTargetPos.x, y: cameraTargetPos.y, z: cameraTargetPos.z}, 1500).easing(TWEEN.Easing.Quadratic.InOut).start();
     }
 
-    // 【關鍵修正】這裡改為直接使用圖片的 src 網址，而不是嘗試轉換資料
     function openOverlay(img) { isRotationPaused=true; document.getElementById('overlay-img').src = img.src; document.getElementById('photo-overlay').classList.add('active'); }
     
     function closeOverlay(e) { document.getElementById('photo-overlay').classList.remove('active'); if(currentState === STATE.OPEN) isRotationPaused=false; }
