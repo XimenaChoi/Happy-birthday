@@ -41,6 +41,11 @@
     </div>
 </div>
 
+<audio id="bgm" loop hidden>
+    <source src="./bgm.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+
 <script type="x-shader/x-vertex" id="ribbon-vs">
     varying vec2 vUv; 
     void main() { 
@@ -205,6 +210,8 @@
     let isTransforming = false; 
     let scene, camera, renderer, composer, controls, mainSpotlight;
     let lidGroup, wallMesh, treeGroup, starMesh;
+    // 【新增變數】masterGroup 用來裝載所有場景物體，方便統一移動
+    let masterGroup;
     let particleMaterial, ribbonMaterial;
     let snowGeo, snowPositions;
     let ornamentsGroup = new THREE.Group();
@@ -318,6 +325,15 @@
         scene.add(new THREE.AmbientLight(0xffffff, 0.2));
         mainSpotlight = new THREE.SpotLight(0xffeebb, 600); mainSpotlight.position.set(0, 60, 0); mainSpotlight.target.position.set(0, 0, 0); mainSpotlight.angle = Math.PI/8; mainSpotlight.penumbra = 0.5; scene.add(mainSpotlight); scene.add(mainSpotlight.target);
         scene.add(new THREE.PointLight(0x4444ff, 3, 100).translateY(20).translateX(-40)); scene.add(new THREE.PointLight(0xffaa00, 2, 80).translateY(10).translateZ(30));
+        
+        // 【新增功能 2：整體向下移動】
+        // 建立一個母群組，將所有物體放入其中，然後移動這個群組
+        masterGroup = new THREE.Group();
+        // 將 Y 設為負值，場景就會向下移動。試試看 -15，您可以根據需要調整這個數字。
+        masterGroup.position.y = -15; 
+        scene.add(masterGroup);
+
+        // 注意：接下來的建立函式中，我們改用 masterGroup.add 而不是 scene.add
         createGround();
         createSnow();
         createLuxuryBox();
@@ -330,12 +346,24 @@
         const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 2.0, 0.5, 0.1);
         composer = new EffectComposer(renderer); composer.addPass(renderPass); composer.addPass(bloomPass);
         window.addEventListener('resize', onResize); window.addEventListener('click', onClick);
-        document.getElementById('photo-overlay').addEventListener('click', closeOverlay); document.getElementById('close-hint').addEventListener('click', closeOverlay); document.getElementById('start-hint').addEventListener('click', startOpening);
+        document.getElementById('photo-overlay').addEventListener('click', closeOverlay); document.getElementById('close-hint').addEventListener('click', closeOverlay); 
+        
+        // 【修改點擊事件：加入音樂播放】
+        document.getElementById('start-hint').addEventListener('click', function() {
+            startOpening();
+            // 找到音樂元素並播放
+            const bgm = document.getElementById('bgm');
+            bgm.volume = 0.5; // 設定音量 (0.0 到 1.0)
+            // 使用 .catch 處理可能因為瀏覽器策略導致的自動播放失敗
+            bgm.play().catch(e => console.log("背景音樂播放失敗，可能需要使用者更多互動:", e));
+        });
     }
 
     function createGround() {
         const plane = new THREE.Mesh(new THREE.PlaneGeometry(500, 500), new THREE.MeshStandardMaterial({ color: 0x080808, roughness: 0.8, metalness: 0.2 }));
-        plane.rotation.x = -Math.PI/2; plane.position.y = -0.1; scene.add(plane);
+        plane.rotation.x = -Math.PI/2; plane.position.y = -0.1; 
+        // 【修改】改為加到 masterGroup
+        masterGroup.add(plane);
     }
 
     function createSnow() {
@@ -346,7 +374,8 @@
         snowGeo.setAttribute('position', new THREE.BufferAttribute(snowPositions, 3));
         const snowMat = new THREE.PointsMaterial({color: 0xffffff, size: 0.6, transparent:true, opacity:0.8, blending: THREE.AdditiveBlending});
         const snowSystem = new THREE.Points(snowGeo, snowMat);
-        scene.add(snowSystem);
+        // 【修改】改為加到 masterGroup
+        masterGroup.add(snowSystem);
     }
 
     function createSurroundingGifts() {
@@ -363,7 +392,8 @@
             const radius = 10 + Math.pow(Math.random(), 1.8) * 18; 
             box.position.set(Math.cos(angle)*radius, size/2, Math.sin(angle)*radius);
             box.rotation.set(Math.random()*0.2, Math.random()*Math.PI, Math.random()*0.2);
-            scene.add(box);
+            // 【修改】改為加到 masterGroup
+            masterGroup.add(box);
         }
     }
 
@@ -374,7 +404,9 @@
         wallMesh = new THREE.Mesh(new THREE.CylinderGeometry(R, R, H, 128), satinRedMat); wallMesh.position.y = H/2;
         const bandGeo = new THREE.BoxGeometry(2.5, H+0.2, R*2.02);
         wallMesh.add(new THREE.Mesh(bandGeo, polishedGoldMat)); wallMesh.add(new THREE.Mesh(bandGeo, polishedGoldMat).rotateY(Math.PI/2));
-        clickableBox.push(wallMesh); scene.add(wallMesh);
+        clickableBox.push(wallMesh); 
+        // 【修改】改為加到 masterGroup
+        masterGroup.add(wallMesh);
         const lidPivot = new THREE.Group(); lidPivot.position.set(0, H, -R); 
         lidGroup = new THREE.Group(); 
         lidGroup.position.set(0, 0, R);
@@ -386,14 +418,17 @@
         bowGroup.add(createFlowingLoop(5.5, Math.PI/8)); bowGroup.add(createFlowingLoop(5.5, -Math.PI/8)); bowGroup.add(createFlowingLoop(-5.5, Math.PI/8)); bowGroup.add(createFlowingLoop(-5.5, -Math.PI/8));
         const tailGeo = new THREE.BoxGeometry(2.4, 7, 0.1); tailGeo.translate(0, -3.5, 0);
         const tail1 = new THREE.Mesh(tailGeo, polishedGoldMat); tail1.position.set(-1, 0, 1); tail1.rotation.set(0.3, 0, 0.4); const tail2 = new THREE.Mesh(tailGeo, polishedGoldMat); tail2.position.set(1, 0, 1); tail2.rotation.set(0.3, 0, -0.4);
-        bowGroup.add(tail1); bowGroup.add(tail2); lidGroup.add(bowGroup); lidPivot.add(lidGroup); clickableBox.push(lidGroup); lidGroup = lidPivot; scene.add(lidGroup);
+        bowGroup.add(tail1); bowGroup.add(tail2); lidGroup.add(bowGroup); lidPivot.add(lidGroup); clickableBox.push(lidGroup); lidGroup = lidPivot; 
+        // 【修改】改為加到 masterGroup
+        masterGroup.add(lidGroup);
     }
     
     function createCompleteTree() {
         treeGroup = new THREE.Group(); 
         treeGroup.position.y = 0.1;
         treeGroup.visible = false;
-        scene.add(treeGroup);
+        // 【修改】改為加到 masterGroup
+        masterGroup.add(treeGroup);
         const ribbonPts = []; const ribbonSteps = 300;
         for(let i=0; i<=ribbonSteps; i++){ const t = i/ribbonSteps; const r = TREE_CONFIG.radius * (1-t); const h = t * TREE_HEIGHT; const a = t * TREE_CONFIG.ribbonTurns * Math.PI * 2; ribbonPts.push(new THREE.Vector3(Math.cos(a)*r, h, Math.sin(a)*r)); }
         const tubeGeo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(ribbonPts), ribbonSteps, 0.15, 8, false);
@@ -475,4 +510,136 @@
             // Cycle through the 25 unique photos
             const plane = new THREE.Mesh(new THREE.PlaneGeometry(1.3, 1.3), new THREE.MeshBasicMaterial({map: photoTextures[i % 25]})); 
             plane.position.z = 0.6; if(type===1) plane.position.z = 0.8; if(type===0) mesh.add(plane); else if (type===1) mesh.children[0].add(plane); else mesh.add(plane);
-            mesh.userData = { swaySpeed: 1+Math.random(), swayOff: Math.random()*6, baseRotX: mesh.rotation.x, triggerHeight: t }; mesh.scale.set(0,0,0); swayingOrnaments.push(mesh); clickableOrnaments.push
+            mesh.userData = { swaySpeed: 1+Math.random(), swayOff: Math.random()*6, baseRotX: mesh.rotation.x, triggerHeight: t }; mesh.scale.set(0,0,0); swayingOrnaments.push(mesh); clickableOrnaments.push(plane); ornamentsGroup.add(mesh);
+            const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints([anchorPos, finalPos]), lineMat); ornamentsGroup.add(line);
+        }
+    }
+
+    function onClick(e) {
+        if(e.target.id==='start-hint' || e.target.id==='close-hint' || document.getElementById('photo-overlay').classList.contains('active')) return;
+        mouse.x=(e.clientX/window.innerWidth)*2-1; mouse.y=-(e.clientY/window.innerHeight)*2+1; raycaster.setFromCamera(mouse,camera);
+        if(currentState===STATE.CLOSED && raycaster.intersectObjects(clickableBox,true).length>0) {
+             // 這裡不需要手動呼叫 startOpening，因為上面的事件監聽器已經處理了
+        } else if(currentState===STATE.OPEN && !isTransforming) { 
+            const starIntersects = raycaster.intersectObject(starMesh);
+            if (starIntersects.length > 0 && starMesh.userData.isClickable) {
+                transformToCake(); 
+            } else {
+                const its=raycaster.intersectObjects(clickableOrnaments); 
+                if(its.length>0) openOverlay(its[0].object.material.map.image); 
+            }
+        } else if (currentState === STATE.MORPH_MODE && !isTransforming) {
+            if (!document.getElementById('photo-overlay').classList.contains('active')) {
+                 if (currentStage === STAGE.CAKE) transformToText1();
+                 else if (currentStage === STAGE.TEXT1) transformToText2();
+                 else if (currentStage === STAGE.TEXT2) transformToText3();
+                 else if (currentStage === STAGE.TEXT3) transformToText4();
+                 else if (currentStage === STAGE.TEXT4) restoreTree(); 
+            }
+        }
+    }
+
+    function startOpening() { if(currentState!==STATE.CLOSED)return; currentState=STATE.OPENING; cameraStartPos.copy(camera.position); camera.getWorldDirection(cameraStartLookAt); cameraStartLookAt.add(cameraStartPos); document.getElementById('start-hint').style.opacity=0; setTimeout(()=>document.getElementById('start-hint').remove(),800); new TWEEN.Tween(mainSpotlight).to({intensity:2500, angle: Math.PI/6}, 2500).start(); }
+    
+    function transformToCake() {
+        isTransforming = true; currentState = STATE.MORPH_MODE; currentStage = STAGE.CAKE; isRotationPaused = true; starMesh.userData.isClickable = false; 
+        new TWEEN.Tween(ribbonMaterial.uniforms.uRibbonOpacity).to({value: 0.0}, 1000).start();
+        new TWEEN.Tween(ornamentsGroup.scale).to({x: 0, y: 0, z: 0}, 800).start();
+        new TWEEN.Tween(starMesh.scale).to({x: 0, y: 0, z: 0}, 800).start();
+        new TWEEN.Tween(particleMaterial.uniforms.uMorphState).to({value: 1.0}, 3000).easing(TWEEN.Easing.Cubic.InOut).onComplete(() => { 
+            isTransforming = false; 
+            document.getElementById('candle-hint').classList.add('active');
+        }).start();
+        new TWEEN.Tween(camera.position).to({x: cameraCakePos.x, y: cameraCakePos.y, z: cameraCakePos.z}, 2500).easing(TWEEN.Easing.Quadratic.InOut).start();
+    }
+
+    function transformToText1() {
+        document.getElementById('candle-hint').classList.remove('active');
+        isTransforming = true; currentStage = STAGE.TEXT1;
+        new TWEEN.Tween(particleMaterial.uniforms.uMorphState).to({value: 2.0}, 3500).easing(TWEEN.Easing.Back.Out).onComplete(() => { isTransforming = false; }).start();
+        new TWEEN.Tween(camera.position).to({x: cameraTextPos.x, y: cameraTextPos.y, z: cameraTextPos.z}, 3000).easing(TWEEN.Easing.Quadratic.InOut).start();
+    }
+    function transformToText2() {
+        isTransforming = true; currentStage = STAGE.TEXT2;
+        new TWEEN.Tween(particleMaterial.uniforms.uMorphState).to({value: 3.0}, 3500).easing(TWEEN.Easing.Cubic.InOut).onComplete(() => { isTransforming = false; }).start();
+    }
+    function transformToText3() {
+        isTransforming = true; currentStage = STAGE.TEXT3;
+        new TWEEN.Tween(particleMaterial.uniforms.uMorphState).to({value: 4.0}, 3500).easing(TWEEN.Easing.Cubic.InOut).onComplete(() => { isTransforming = false; }).start();
+    }
+    function transformToText4() {
+        isTransforming = true; currentStage = STAGE.TEXT4;
+        new TWEEN.Tween(particleMaterial.uniforms.uMorphState).to({value: 5.0}, 3500).easing(TWEEN.Easing.Cubic.InOut).onComplete(() => { isTransforming = false; }).start();
+    }
+
+    function restoreTree() {
+        isTransforming = true;
+        currentStage = STAGE.TREE;
+        particleMaterial.uniforms.uReturning.value = 1.0;
+        new TWEEN.Tween(ribbonMaterial.uniforms.uRibbonOpacity).to({value: 1.0}, 1500).delay(200).start();
+        new TWEEN.Tween(ornamentsGroup.scale).to({x: 1, y: 1, z: 1}, 1500).delay(200).start();
+        new TWEEN.Tween(starMesh.scale).to({x: 1, y: 1, z: 1}, 1500).delay(200).start();
+        new TWEEN.Tween(particleMaterial.uniforms.uMorphState)
+            .to({value: 0.0}, 1500)
+            .easing(TWEEN.Easing.Quadratic.InOut)
+            .onComplete(() => { 
+                isTransforming = false; 
+                currentState = STATE.OPEN;
+                isRotationPaused = false;
+                starMesh.userData.isClickable = true; 
+                particleMaterial.uniforms.uReturning.value = 0.0;
+            })
+            .start();
+        new TWEEN.Tween(camera.position).to({x: cameraTargetPos.x, y: cameraTargetPos.y, z: cameraTargetPos.z}, 1500).easing(TWEEN.Easing.Quadratic.InOut).start();
+    }
+
+    // 【關鍵修正】這裡改為直接使用圖片的 src 網址，而不是嘗試轉換資料
+    function openOverlay(img) { isRotationPaused=true; document.getElementById('overlay-img').src = img.src; document.getElementById('photo-overlay').classList.add('active'); }
+    
+    function closeOverlay(e) { document.getElementById('photo-overlay').classList.remove('active'); if(currentState === STATE.OPEN) isRotationPaused=false; }
+    function onResize() { camera.aspect=window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth,window.innerHeight); composer.setSize(window.innerWidth,window.innerHeight); if(particleMaterial) particleMaterial.uniforms.rendererHeight.value = window.innerHeight; }
+    const TWEEN={tweens:[],update(){this.tweens.forEach(t=>t.update(clock.getElapsedTime()));this.tweens=this.tweens.filter(t=>!t.done);},Easing:{Linear:{None:function(k){return k;}},Quadratic:{InOut:function(k){if((k*=2)<1)return 0.5*k*k;return-0.5*(--k*(k-2)-1);}},Back:{Out:function(k){const s=1.70158;return--k*k*((s+1)*k+s)+1;}},Cubic:{InOut:function(k){if((k*=2)<1)return 0.5*k*k*k;return 0.5*((k-=2)*k*k+2);}}},Tween:function(o){this.o=o;this.done=false;this._easing=TWEEN.Easing.Linear.None;this._onComplete=null;this._delay=0;this.to=function(t,d){this.t=t;this.d=d/1000;this.sT=-1;return this;};this.easing=function(e){this._easing=e;return this;};this.delay=function(d){this._delay=d/1000;return this;};this.onComplete=function(c){this._onComplete=c;return this;};this.start=function(){this.sT=clock.getElapsedTime()+this._delay;this.sV={};for(let k in this.t)this.sV[k]=this.o[k];TWEEN.tweens.push(this);};this.update=function(t){if(t<this.sT)return;let p=Math.min(1,(t-this.sT)/this.d);let e=this._easing(p);for(let k in this.t)this.o[k]=this.sV[k]+(this.t[k]-this.sV[k])*e;if(p===1){this.done=true;if(this._onComplete)this._onComplete();}}}};
+    function smoothstep(edge0, edge1, x) { x = Math.max(0, Math.min(1, (x - edge0) / (edge1 - edge0))); return x * x * (3 - 2 * x); }
+
+    function animate() {
+        requestAnimationFrame(animate); const time=clock.getElapsedTime(); TWEEN.update();
+        if(particleMaterial) particleMaterial.uniforms.uTime.value = time;
+        if(snowPositions) {
+            for(let i = 0; i < snowPositions.length; i+=3) {
+                snowPositions[i+1] -= 0.2 + Math.random() * 0.1;
+                snowPositions[i] += Math.sin(time + snowPositions[i+1] * 0.05) * 0.05;
+                if(snowPositions[i+1] < -10) snowPositions[i+1] = 300;
+            }
+            snowGeo.attributes.position.needsUpdate = true;
+        }
+        if(currentState === STATE.OPENING) {
+            animProgress += 0.006; const overallProgress = smoothstep(0, 1, animProgress);
+            camera.position.lerpVectors(cameraStartPos, cameraTargetPos, overallProgress); const currentLookAt = new THREE.Vector3().lerpVectors(cameraStartLookAt, new THREE.Vector3(0, 15, 0), overallProgress); camera.lookAt(currentLookAt);
+            const boxProgress = Math.min(1, animProgress * 1.2); const easeBox = smoothstep(0, 1, boxProgress);
+            lidGroup.rotation.x = -Math.PI/1.3 * easeBox; lidGroup.position.set(0, 16+boxProgress*20, -14-boxProgress*20); 
+            wallMesh.scale.y = 1 - easeBox; wallMesh.position.y = (8 * (1-easeBox));
+            if(boxProgress>=1) wallMesh.visible = lidGroup.visible = false;
+            if(animProgress > 0.15) {
+                if (!treeGroup.visible) treeGroup.visible = true;
+                const treeProgressRaw = (animProgress - 0.15) / 0.85; const treeProgress = smoothstep(0, 1, treeProgressRaw);
+                particleMaterial.uniforms.uGrowth.value = treeProgress;
+                if(ribbonMaterial) ribbonMaterial.uniforms.uProgress.value = treeProgress;
+                if(treeProgress > 0.01 && currentState !== STATE.MORPH_MODE) ornamentsGroup.visible = true;
+                swayingOrnaments.forEach(orn => { if(treeProgress >= orn.userData.triggerHeight) orn.scale.lerp(new THREE.Vector3(1,1,1), 0.05); });
+                if(treeProgress >= 0.95) { starScale = Math.min(1, starScale + 0.03); starMesh.scale.setScalar(starScale * (0.5 + Math.sin(time*15)*0.1)); }
+            }
+            if(animProgress >= 1.1 && starScale >= 0.9) {
+                 currentState = STATE.OPEN;
+                 if (starMesh) starMesh.userData.isClickable = true;
+            }
+        } else if (currentState === STATE.OPEN) {
+            if(!isRotationPaused) { treeGroup.rotation.y += 0.002; starMesh.scale.setScalar(0.5 + Math.sin(time*8)*0.1); swayingOrnaments.forEach(o => o.rotation.x = o.userData.baseRotX + Math.sin(time*o.userData.swaySpeed+o.userData.swayOff)*0.15); }
+        } else if (currentState === STATE.MORPH_MODE) {
+             camera.lookAt(0, 15, 0);
+        }
+        if(currentState !== STATE.OPENING) controls.update(); composer.render();
+    }
+    init();
+</script>
+</body>
+</html>
