@@ -488,7 +488,7 @@
         ornamentsGroup.visible = false;
         const goldMat = new THREE.MeshStandardMaterial({ color: 0xffdd44, metalness: 0.8, roughness: 0.2, emissive: 0x553300, emissiveIntensity: 0.4 });
         const lineMat = new THREE.LineBasicMaterial({ color: 0x886644, transparent: true, opacity: 0.6 });
-        for(let i=0; i<25; i++) { 
+        for(let i=0; i<28; i++) { 
             const color = ORNAMENT_PALETTE[i % ORNAMENT_PALETTE.length]; 
             const mat = new THREE.MeshPhysicalMaterial({ color: color, metalness: 0.6, roughness: 0.1, clearcoat: 1.0, emissive: color, emissiveIntensity: 0.5 });
             let mesh; const type = i % 4;
